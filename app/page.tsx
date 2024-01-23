@@ -1,9 +1,30 @@
 import Image from "next/image";
-import { fetchNeurons } from "@/app/lib/data";
+import {
+  fetchNeurons,
+  fetchImagesById,
+  fetchTopActivationsForNeuron,
+} from "@/app/lib/data";
 
 export default async function Home() {
   const neurons = await fetchNeurons();
-  console.log("component", neurons[0].top_classes);
+  const topActivations = await fetchTopActivationsForNeuron(neurons[0].id);
+  const images = await fetchImagesById(
+    topActivations
+      .map((item) => item.image_id)
+      .filter((id) => id !== null) as number[]
+  );
+  const sortedImages = images.sort((a, b) => {
+    return (
+      topActivations.findIndex((item) => item.image_id === a.id) -
+      topActivations.findIndex((item) => item.image_id === b.id)
+    );
+  });
+
+  console.log("component", neurons);
+
+  // const blob = new Blob([images[0].data], { type: 'image/png' }); // Adjust MIME type if necessary
+  // Create a URL for the blob
+  // const url = URL.createObjectURL(blob);
 
   return (
     <main className="flex min-h-screen flex-col p-24 w-xl">
@@ -28,27 +49,37 @@ export default async function Home() {
         <button type="submit">Submit</button>
       </form>
 
-      <div className="w-xl mt-24">
-        <div className="text-2xl my-4">Neurons</div>
-        <table>
-          <thead>
-            <tr className="text-left">
-              <th>ID</th>
-              <th>Max Activation</th>
-              <th>Top Classes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {neurons.slice(0, 20).map((neuron, index) => (
-              <tr key={index}>
-                <td>{neuron.id}</td>
-                <td>{neuron.max_activation.toFixed(4)}</td>
-                <td>{neuron.top_classes}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="text-2xl my-4">Reference Neuron</div>
+      <div className="neuron-info">
+        <p>ID: {neurons[0].id}</p>
+        <p>
+          Max Activation:{" "}
+          {neurons[0].max_activation && neurons[0].max_activation.toFixed(4)}
+        </p>
+        <p>Top Classes: {neurons[0].top_classes}</p>
       </div>
+
+      <div className="text-2xl my-4">Top Activations</div>
+      {topActivations.map((activation, index) => (
+        <div key={index}>
+          <p>Neuron ID: {activation.neuron_id}</p>
+          <p>Image ID: {activation.image_id}</p>
+          <p>
+            Patch Activations:{" "}
+            {activation.patch_activations.slice(0, 10).join(", ")}...
+          </p>
+        </div>
+      ))}
+
+      {sortedImages.map((image, index) => (
+        <div className="p-4" key={index}>
+          {image.id}, {image.label}, {image.predicted}
+          <img
+            src={`data:image/jpeg;base64,${image.data}`}
+            alt={`Image ${index}`}
+          />
+        </div>
+      ))}
     </main>
   );
 }
