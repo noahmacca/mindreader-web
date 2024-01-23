@@ -5,7 +5,11 @@ export async function fetchNeurons() {
   noStore();
 
   try {
-    const data = await prisma.neurons.findMany();
+    const data = await prisma.neurons.findMany({
+      orderBy: {
+        max_activation: "desc",
+      },
+    });
     return data;
   } catch (error) {
     console.error("Database Error:", error);

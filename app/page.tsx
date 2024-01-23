@@ -29,8 +29,25 @@ export default async function Home() {
       </form>
 
       <div className="w-xl mt-24">
-        <div className="text-2xl">Neurons</div>
-        <div>image grid</div>
+        <div className="text-2xl my-4">Neurons</div>
+        <table>
+          <thead>
+            <tr className="text-left">
+              <th>ID</th>
+              <th>Max Activation</th>
+              <th>Top Classes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {neurons.slice(0, 20).map((neuron, index) => (
+              <tr key={index}>
+                <td>{neuron.id}</td>
+                <td>{neuron.max_activation.toFixed(4)}</td>
+                <td>{neuron.top_classes}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </main>
   );
