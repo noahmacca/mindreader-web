@@ -5,9 +5,9 @@ export async function fetchNeurons() {
   noStore();
 
   try {
-    const data = await prisma.neurons.findMany({
+    const data = await prisma.neuron.findMany({
       orderBy: {
-        max_activation: "desc",
+        maxActivation: "desc",
       },
     });
     return data;
@@ -21,7 +21,7 @@ export async function fetchImagesById(ids: number[]) {
   noStore();
 
   try {
-    const data = await prisma.images.findMany({
+    const data = await prisma.image.findMany({
       where: {
         id: {
           in: ids,
@@ -40,15 +40,20 @@ export async function fetchTopActivationsForNeuron(neuron_id: string) {
   noStore();
 
   try {
-    const data = await prisma.neuron_image_activations.findMany({
+    const data = await prisma.neuronImageActivation.findMany({
       where: {
-        neuron_id: neuron_id,
+        neuronId: neuron_id,
       },
       orderBy: {
-        max_activation: "desc",
+        maxActivation: "desc",
       },
-      take: 10,
+      take: 50,
+      include: {
+        Image: true,
+        Neuron: true,
+      },
     });
+
     return data;
   } catch (error) {
     console.error("Database Error:", error);
