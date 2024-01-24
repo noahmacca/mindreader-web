@@ -5,81 +5,84 @@ import {
   fetchTopActivationsForNeuron,
 } from "@/app/lib/data";
 
+function renderActivation(act: Number) {
+  const actRound = Number(act.toFixed(3));
+  if (actRound > 3) return `Very High (${actRound})`;
+  if (actRound > 2) return `High (${actRound})`;
+  if (actRound > 1) return `Moderate (${actRound})`;
+  return `Low (${actRound})`;
+}
+
+function prettifyClass(strIn: String) {
+  return strIn
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export default async function Home() {
-  const neurons = await fetchNeurons();
-  const topActivations = await fetchTopActivationsForNeuron(neurons[0].id);
-  const images = await fetchImagesById(
-    topActivations
-      .map((item) => item.image_id)
-      .filter((id) => id !== null) as number[]
-  );
-  const sortedImages = images.sort((a, b) => {
-    return (
-      topActivations.findIndex((item) => item.image_id === a.id) -
-      topActivations.findIndex((item) => item.image_id === b.id)
-    );
-  });
-
-  console.log("component", neurons);
-
-  // const blob = new Blob([images[0].data], { type: 'image/png' }); // Adjust MIME type if necessary
-  // Create a URL for the blob
-  // const url = URL.createObjectURL(blob);
+  // const data = await fetchTopActivationsForNeuron("7_FC1_489");
+  const data = await fetchTopActivationsForNeuron("7_FC1_961");
+  const neuron = data[0].Neuron;
 
   return (
     <main className="flex min-h-screen flex-col p-24 w-xl">
-      <div className="text-2xl">Input</div>
-      <form className="mt-2">
-        <label htmlFor="neuronIdx">Neuron idx:</label>
-        <select id="neuronIdx">
-          {/* Replace with your actual options */}
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-
-        <label htmlFor="imageIdx">Image idx:</label>
-        <select id="imageIdx">
-          {/* Replace with your actual options */}
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-
-        <button type="submit">Submit</button>
-      </form>
-
-      <div className="text-2xl my-4">Reference Neuron</div>
-      <div className="neuron-info">
-        <p>ID: {neurons[0].id}</p>
-        <p>
-          Max Activation:{" "}
-          {neurons[0].max_activation && neurons[0].max_activation.toFixed(4)}
-        </p>
-        <p>Top Classes: {neurons[0].top_classes}</p>
+      <div className="text-4xl font-semibold mt-12 mb-4">
+        Neuron: {neuron.id}
       </div>
+      <div>Fires most strongly for: {neuron.topClasses}</div>
 
-      <div className="text-2xl my-4">Top Activations</div>
-      {topActivations.map((activation, index) => (
-        <div key={index}>
-          <p>Neuron ID: {activation.neuron_id}</p>
-          <p>Image ID: {activation.image_id}</p>
-          <p>
-            Patch Activations:{" "}
-            {activation.patch_activations.slice(0, 10).join(", ")}...
-          </p>
-        </div>
-      ))}
-
-      {sortedImages.map((image, index) => (
-        <div className="p-4" key={index}>
-          {image.id}, {image.label}, {image.predicted}
-          <img
-            src={`data:image/jpeg;base64,${image.data}`}
-            alt={`Image ${index}`}
-          />
-        </div>
-      ))}
+      <div className="flex flex-row flex-wrap space-x-4 mt-8">
+        {data.map((activation, index) => (
+          <div
+            key={index}
+            className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="relative inline-block rounded w-full">
+              <img
+                src={`data:image/jpeg;base64,${activation.Image.data}`}
+                alt={`Image ${index}`}
+                className="block w-full"
+              />
+              <div className="opacity-35 hover:opacity-0 transition-opacity duration-150">
+                <div className="bg-red-500 bg-blend-multiply absolute top-0 left-0 w-full h-full"></div>
+                <img
+                  src={`data:image/jpeg;base64,${activation.patchActivationsScaled}`}
+                  className="absolute top-0 left-0 mix-blend-darken w-full"
+                />
+              </div>
+            </div>
+            <div className="px-4 py-4">
+              <div className="font-bold text-xl mb-2">
+                {prettifyClass(activation.Image.label)}
+              </div>
+              <div className="text-md">
+                <div className="flex justify-between">
+                  <span className="font-medium">ID</span>
+                  <span className="text-gray-700">{activation.Image.id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Activation:</span>
+                  <span className="text-gray-700">
+                    {renderActivation(activation.maxActivation)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Predicted:</span>
+                  <span>
+                    {activation.Image.predicted}{" "}
+                    {activation.Image.label === activation.Image.predicted ? (
+                      <span className="text-green-500">✅</span>
+                    ) : (
+                      <span className="text-red-500">❌</span>
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
