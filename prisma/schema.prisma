@@ -7,28 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model images {
-  id                       Int                        @id @default(autoincrement())
-  label                    String                     @db.VarChar
-  predicted                String                     @db.VarChar
-  max_activation           Float
-  data                     String                     @db.VarChar
-  neuron_image_activations neuron_image_activations[]
+model Image {
+  id                    Int                     @id @default(autoincrement())
+  label                 String                  @db.VarChar
+  predicted             String                  @db.VarChar
+  maxActivation         Float
+  data                  String                  @db.VarChar
+  NeuronImageActivation NeuronImageActivation[]
 }
 
-model neuron_image_activations {
-  id                Int     @id @default(autoincrement())
-  neuron_id         String  @db.VarChar
-  image_id          Int
-  max_activation    Float
-  patch_activations Float[]
-  images            images  @relation(fields: [image_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  neurons           neurons @relation(fields: [neuron_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Neuron {
+  id                    String                  @id @db.VarChar
+  topClasses            String                  @db.VarChar
+  maxActivation         Float
+  NeuronImageActivation NeuronImageActivation[]
 }
 
-model neurons {
-  id                       String                     @id @db.VarChar
-  top_classes              String                     @db.VarChar
-  max_activation           Float
-  neuron_image_activations neuron_image_activations[]
+model NeuronImageActivation {
+  id                     Int     @id @default(autoincrement())
+  neuronId               String  @db.VarChar
+  imageId                Int
+  maxActivation          Float
+  patchActivations       Float[]
+  patchActivationsScaled String  @db.VarChar
+  Image                  Image   @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "NeuronImageActivations_imageId_fkey")
+  Neuron                 Neuron  @relation(fields: [neuronId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "NeuronImageActivations_neuronId_fkey")
 }
