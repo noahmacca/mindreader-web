@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { fetchTopActivationsForNeuron } from "@/app/lib/data";
 import Link from "next/link";
+import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
 function renderActivation(act: Number) {
   const actRound = Number(act.toFixed(3));
@@ -19,11 +20,10 @@ function prettifyClass(strIn: String) {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const data = await fetchTopActivationsForNeuron(id);
+  const data = await fetchTopActivationsForNeuron(id, 50);
   if (data.length === 0) {
     throw new Error(`No neuron data found for id=${id}`);
   }
-  // const data = await fetchTopActivationsForNeuron("7_FC1_961");
   const neuron = data[0].Neuron;
 
   return (
@@ -42,21 +42,10 @@ export default async function Page({ params }: { params: { id: string } }) {
             key={index}
             className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
           >
-            <div className="relative inline-block rounded w-full">
-              <img
-                src={`data:image/jpeg;base64,${activation.Image.data}`}
-                alt={`Image ${index}`}
-                className="block w-full"
-              />
-              <div className="opacity-40 hover:opacity-0 transition-opacity duration-150">
-                <div className="bg-rose-500 bg-blend-multiply absolute top-0 left-0 w-full h-full"></div>
-                <img
-                  src={`data:image/jpeg;base64,${activation.patchActivationsScaled}`}
-                  className="absolute top-0 left-0 mix-blend-darken w-full"
-                  alt="Activation heatmap"
-                />
-              </div>
-            </div>
+            <ImageWithHeatmap
+              imageData={activation.Image.data}
+              heatmapData={activation.patchActivationsScaled}
+            />
             <div className="px-4 py-4">
               <div className="font-bold text-xl mb-2">
                 {prettifyClass(activation.Image.label)}

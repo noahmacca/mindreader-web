@@ -2,20 +2,25 @@ import prisma from "../lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 
 export async function listNeurons() {
-  noStore();
+  // noStore();
 
   try {
-    const data = await prisma.neuron.findMany({
-      // where: {
-      //   id: {
-      //     contains: "FC2",
-      //   },
-      // },
+    const neurons = await prisma.neuron.findMany({
       orderBy: {
         maxActivation: "desc",
       },
-      take: 50,
+      take: 30,
     });
+
+    const data = await Promise.all(
+      neurons.map(async (neuron) => {
+        const topActivations = await fetchTopActivationsForNeuron(neuron.id, 4);
+        return {
+          ...neuron,
+          topActivations,
+        };
+      })
+    );
     return data;
   } catch (error) {
     console.error("Database Error:", error);
@@ -42,8 +47,11 @@ export async function fetchImagesById(ids: number[]) {
   }
 }
 
-export async function fetchTopActivationsForNeuron(neuron_id: string) {
-  noStore();
+export async function fetchTopActivationsForNeuron(
+  neuron_id: string,
+  limit: number
+) {
+  // noStore();
 
   try {
     const data = await prisma.neuronImageActivation.findMany({
@@ -53,7 +61,7 @@ export async function fetchTopActivationsForNeuron(neuron_id: string) {
       orderBy: {
         maxActivation: "desc",
       },
-      take: 50,
+      take: limit,
       include: {
         Image: true,
         Neuron: true,
