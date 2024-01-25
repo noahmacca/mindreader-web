@@ -6,6 +6,11 @@ export async function listNeurons() {
 
   try {
     const neurons = await prisma.neuron.findMany({
+      // where: {
+      //   id: {
+      //     contains: "FC2",
+      //   },
+      // },
       orderBy: {
         maxActivation: "desc",
       },
