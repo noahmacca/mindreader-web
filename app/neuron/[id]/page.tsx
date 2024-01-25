@@ -2,21 +2,7 @@ import Image from "next/image";
 import { fetchTopActivationsForNeuron } from "@/app/lib/data";
 import Link from "next/link";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
-
-function renderActivation(act: Number) {
-  const actRound = Number(act.toFixed(3));
-  if (actRound > 3) return `Very High (${actRound})`;
-  if (actRound > 2) return `High (${actRound})`;
-  if (actRound > 1) return `Moderate (${actRound})`;
-  return `Low (${actRound})`;
-}
-
-function prettifyClass(strIn: String) {
-  return strIn
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+import { renderActivation, prettifyClass } from "@/app/lib/helpers";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -36,11 +22,12 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
       <div>Fires most strongly for: {neuron.topClasses}</div>
 
-      <div className="flex flex-row flex-wrap space-x-4 mt-8">
+      <div className="flex flex-row flex-wrap mt-8">
         {data.map((activation, index) => (
-          <div
+          <Link
+            href={`/image/${activation.Image.id}`}
             key={index}
-            className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
+            className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50 mr-2"
           >
             <ImageWithHeatmap
               imageData={activation.Image.data}
@@ -52,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               </div>
               <div className="text-md">
                 <div className="flex justify-between">
-                  <span className="font-medium">ID</span>
+                  <span className="font-medium">Image ID</span>
                   <span className="text-gray-700">{activation.Image.id}</span>
                 </div>
                 <div className="flex justify-between">
@@ -64,7 +51,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="flex justify-between">
                   <span className="font-medium">Predicted:</span>
                   <span>
-                    {activation.Image.predicted}{" "}
+                    {prettifyClass(activation.Image.predicted)}{" "}
                     {activation.Image.label === activation.Image.predicted ? (
                       <span className="text-green-500">✅</span>
                     ) : (
@@ -74,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </main>

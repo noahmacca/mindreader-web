@@ -11,7 +11,7 @@ export default async function Page() {
       </h1>
       {neurons.map((neuron) => (
         <Link href={`/neuron/${neuron.id}`} key={`card-${neuron.id}`}>
-          <div className="rounded overflow-hidden shadow-lg my-4 cursor-pointer bg-gray-50">
+          <div className="rounded overflow-hidden shadow-lg my-4 cursor-pointer bg-gray-50 hover:bg-gray-100">
             <div className="px-4 py-4">
               <div className="font-bold text-xl mb-2">{neuron.id}</div>
               <div className="text-sm">

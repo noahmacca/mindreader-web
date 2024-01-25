@@ -48,7 +48,7 @@ export async function fetchImagesById(ids: number[]) {
 }
 
 export async function fetchTopActivationsForNeuron(
-  neuron_id: string,
+  neuronId: string,
   limit: number
 ) {
   // noStore();
@@ -56,7 +56,35 @@ export async function fetchTopActivationsForNeuron(
   try {
     const data = await prisma.neuronImageActivation.findMany({
       where: {
-        neuronId: neuron_id,
+        neuronId: neuronId,
+      },
+      orderBy: {
+        maxActivation: "desc",
+      },
+      take: limit,
+      include: {
+        Image: true,
+        Neuron: true,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch neuron data.");
+  }
+}
+
+export async function fetchTopActivationsForImage(
+  imageId: number,
+  limit: number
+) {
+  // noStore();
+
+  try {
+    const data = await prisma.neuronImageActivation.findMany({
+      where: {
+        imageId: imageId,
       },
       orderBy: {
         maxActivation: "desc",
