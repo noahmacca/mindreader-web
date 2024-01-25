@@ -1,14 +1,20 @@
 import prisma from "../lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 
-export async function fetchNeurons() {
+export async function listNeurons() {
   noStore();
 
   try {
     const data = await prisma.neuron.findMany({
+      // where: {
+      //   id: {
+      //     contains: "FC2",
+      //   },
+      // },
       orderBy: {
         maxActivation: "desc",
       },
+      take: 50,
     });
     return data;
   } catch (error) {
