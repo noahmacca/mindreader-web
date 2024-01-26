@@ -5,13 +5,12 @@ import { renderActivation, prettifyClass } from "@/app/lib/helpers";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = Number(params.id);
-  const data = await fetchTopActivationsForImage(id, 50);
+  const data = await fetchTopActivationsForImage(id, 100);
 
-  if (data.length === 0) {
+  if (data.numActivations === 0) {
     throw new Error(`No image data found for id=${id}`);
   }
 
-  const image = data[0].Image;
   return (
     <main className="flex min-h-screen flex-col p-24 w-xl">
       <div className="mt-12 mb-3">
@@ -19,56 +18,50 @@ export default async function Page({ params }: { params: { id: string } }) {
           All Neurons
         </Link>
         <div className="text-4xl font-semibold">
-          Image: {prettifyClass(image.label)}
+          Image: {prettifyClass(data.image.label)}
         </div>
       </div>
       <div>
         <span className="font-medium">ID:</span>
-        <span> {image.id}</span>
+        <span> {data.image.id}</span>
       </div>
       <div>
         <span className="font-medium">Predicted: </span>
         <span>
           {" "}
-          {prettifyClass(image.predicted)}{" "}
-          {image.label === image.predicted ? (
+          {prettifyClass(data.image.predicted)}{" "}
+          {data.image.label === data.image.predicted ? (
             <span className="text-green-500">✅</span>
           ) : (
             <span className="text-red-500">❌</span>
           )}
         </span>
       </div>
-      <div className="flex flex-row flex-wrap space-x-4 mt-8">
-        {data.map((activation, index) => (
-          <Link
-            href={`/neuron/${activation.Neuron.id}`}
-            key={index}
-            className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
-          >
-            <ImageWithHeatmap
-              imageData={activation.Image.data}
-              heatmapData={activation.patchActivationsScaled}
-            />
-            <div className="px-4 py-4">
-              <div className="font-bold text-xl mb-2">
-                {prettifyClass(activation.Image.label)}
-              </div>
-              <div className="text-md">
-                <div className="flex justify-between">
-                  <span className="font-medium">Neuron ID</span>
-                  <span className="text-gray-700">{activation.Neuron.id}</span>
+      {data.layerActivations.map((layer) => (
+        <div key={`layer-${layer.name}`}>
+          <div className="text-3xl font-bold mt-12 mb-2">
+            Layer: {layer.name}
+          </div>
+          <div className="flex flex-row flex-wrap">
+            {layer.neuronActivations.map((activation, index) => (
+              <Link
+                href={`/neuron/${activation.Neuron.id}`}
+                key={index}
+                className="w-36 rounded overflow-hidden shadow-lg my-2 ml-2 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
+              >
+                <ImageWithHeatmap
+                  imageData={activation.Image.data}
+                  heatmapData={activation.patchActivationsScaled}
+                />
+                <div className="px-2 py-1 text-xs text-gray-700">
+                  <div>{activation.Neuron.id}</div>
+                  <div>{renderActivation(activation.maxActivation)}</div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Activation:</span>
-                  <span className="text-gray-700">
-                    {renderActivation(activation.maxActivation)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
     </main>
   );
 }

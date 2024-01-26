@@ -1,16 +1,20 @@
 import prisma from "../lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 
-export async function getNeuronLayers(): Promise<string[]> {
-  const neurons = await prisma.neuron.findMany();
+function getLayersFromNeuronIds(neuronIds: Array<string>) {
   const layerSet = new Set<string>();
-  neurons.forEach((neuron) => {
-    const parts = neuron.id.split("_");
+  neuronIds.forEach((neuronId) => {
+    const parts = neuronId.split("_");
     if (parts.length > 1) {
       layerSet.add(parts.slice(0, 2).join("_"));
     }
   });
   return Array.from(layerSet);
+}
+
+export async function getNeuronLayers(): Promise<string[]> {
+  const neurons = await prisma.neuron.findMany();
+  return getLayersFromNeuronIds(neurons.map((neuron) => neuron.id));
 }
 
 export async function getNeuronsForLayer(
@@ -71,7 +75,8 @@ export async function fetchImagesById(ids: number[]) {
 
 export async function fetchTopActivationsForNeuron(
   neuronId: string,
-  limit: number
+  limit: number,
+  imageId?: number
 ) {
   // noStore();
 
@@ -79,6 +84,7 @@ export async function fetchTopActivationsForNeuron(
     const data = await prisma.neuronImageActivation.findMany({
       where: {
         neuronId: neuronId,
+        ...(imageId ? { Image: { id: imageId } } : {}),
       },
       orderBy: {
         maxActivation: "desc",
@@ -104,7 +110,9 @@ export async function fetchTopActivationsForImage(
   // noStore();
 
   try {
-    const data = await prisma.neuronImageActivation.findMany({
+    const layers = await getNeuronLayers();
+
+    const activations = await prisma.neuronImageActivation.findMany({
       where: {
         imageId: imageId,
       },
@@ -118,7 +126,18 @@ export async function fetchTopActivationsForImage(
       },
     });
 
-    return data;
+    const layerActivations = layers.map((layer) => ({
+      name: layer,
+      neuronActivations: activations.filter((item) =>
+        item.Neuron.id.includes(layer)
+      ),
+    }));
+
+    return {
+      image: activations[0].Image,
+      numActivations: activations.length,
+      layerActivations,
+    };
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch neuron data.");

@@ -12,7 +12,7 @@ export default function ImageWithHeatmap({
         alt={`Image`}
         className="block w-full rounded"
       />
-      <div className="opacity-50 hover:opacity-0 transition-opacity duration-150">
+      <div className="opacity-45 hover:opacity-0 transition-opacity duration-150">
         <img
           src={`data:image/jpeg;base64,${heatmapData}`}
           style={{ imageRendering: "pixelated" }}

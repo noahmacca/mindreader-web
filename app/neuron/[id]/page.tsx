@@ -6,7 +6,7 @@ import { renderActivation, prettifyClass } from "@/app/lib/helpers";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const data = await fetchTopActivationsForNeuron(id, 50);
+  const data = await fetchTopActivationsForNeuron(id, 100);
   if (data.length === 0) {
     throw new Error(`No neuron data found for id=${id}`);
   }
@@ -27,39 +27,15 @@ export default async function Page({ params }: { params: { id: string } }) {
           <Link
             href={`/image/${activation.Image.id}`}
             key={index}
-            className="w-72 rounded overflow-hidden shadow-lg my-4 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50 mr-2"
+            className="w-36 rounded overflow-hidden shadow-lg my-2 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50 mr-2"
           >
             <ImageWithHeatmap
               imageData={activation.Image.data}
               heatmapData={activation.patchActivationsScaled}
             />
-            <div className="px-4 py-4">
-              <div className="font-bold text-xl mb-2">
-                {prettifyClass(activation.Image.label)}
-              </div>
-              <div className="text-md">
-                <div className="flex justify-between">
-                  <span className="font-medium">Image ID</span>
-                  <span className="text-gray-700">{activation.Image.id}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Activation:</span>
-                  <span className="text-gray-700">
-                    {renderActivation(activation.maxActivation)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Predicted:</span>
-                  <span>
-                    {prettifyClass(activation.Image.predicted)}{" "}
-                    {activation.Image.label === activation.Image.predicted ? (
-                      <span className="text-green-500">✅</span>
-                    ) : (
-                      <span className="text-red-500">❌</span>
-                    )}
-                  </span>
-                </div>
-              </div>
+            <div className="px-2 py-1 text-xs text-gray-700">
+              <div>{prettifyClass(activation.Image.label)}</div>
+              <div>{renderActivation(activation.maxActivation)}</div>
             </div>
           </Link>
         ))}
