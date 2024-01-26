@@ -1,6 +1,7 @@
 import { listNeurons } from "@/app/lib/data";
 import Link from "next/link";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
+import { renderActivation } from "@/app/lib/helpers";
 
 export default async function Page() {
   const neurons = await listNeurons();
@@ -15,16 +16,18 @@ export default async function Page() {
             <div className="px-4 py-4">
               <div className="font-bold text-xl mb-2">{neuron.id}</div>
               <div className="text-sm">
-                <div className="flex justify-between">
-                  <span className="font-medium">Max Activation:</span>
-                  <span className="text-gray-700">{neuron.maxActivation}</span>
+                <div className="flex space-x-1">
+                  <span className="font-medium">Max Activation: </span>
+                  <span className="text-gray-700">
+                    {renderActivation(neuron.maxActivation)}
+                  </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex space-x-1">
                   <span className="font-medium">Top Classes:</span>
                   <span className="text-gray-700">{neuron.topClasses}</span>
                 </div>
               </div>
-              <div className="flex flex-row flex-wrap justify-center mt-4">
+              <div className="flex flex-row flex-wrap mt-4">
                 {neuron.topActivations.map((activation, index) => (
                   <div
                     key={`key-${neuron.id}-${activation.id}`}
