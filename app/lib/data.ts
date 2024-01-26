@@ -1,25 +1,42 @@
 import prisma from "../lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 
-export async function listNeurons() {
-  // noStore();
+export async function getNeuronLayers(): Promise<string[]> {
+  const neurons = await prisma.neuron.findMany();
+  const layerSet = new Set<string>();
+  neurons.forEach((neuron) => {
+    const parts = neuron.id.split("_");
+    if (parts.length > 1) {
+      layerSet.add(parts.slice(0, 2).join("_"));
+    }
+  });
+  return Array.from(layerSet);
+}
 
+export async function getNeuronsForLayer(
+  layer: string,
+  numNeurons: number,
+  numActPerNeuron: number
+) {
   try {
     const neurons = await prisma.neuron.findMany({
-      // where: {
-      //   id: {
-      //     contains: "FC2",
-      //   },
-      // },
+      where: {
+        id: {
+          contains: layer,
+        },
+      },
       orderBy: {
         maxActivation: "desc",
       },
-      take: 30,
+      take: numNeurons,
     });
 
     const data = await Promise.all(
       neurons.map(async (neuron) => {
-        const topActivations = await fetchTopActivationsForNeuron(neuron.id, 4);
+        const topActivations = await fetchTopActivationsForNeuron(
+          neuron.id,
+          numActPerNeuron
+        );
         return {
           ...neuron,
           topActivations,
@@ -28,7 +45,7 @@ export async function listNeurons() {
     );
     return data;
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error("Database Error getNeuronsForLayer:", error);
     throw new Error("Failed to fetch neuron data.");
   }
 }
