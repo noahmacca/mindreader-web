@@ -5,12 +5,11 @@ import { renderActivation } from "@/app/lib/helpers";
 
 export default async function Page() {
   const layersPresent = await getNeuronLayers();
-  console.log(layersPresent);
 
   const topNeuronsForAllLayers = await Promise.all(
     layersPresent.map(async (layer) => ({
       name: layer,
-      neurons: await getNeuronsForLayer(layer, 5, 8),
+      neurons: await getNeuronsForLayer(layer, 10, 8),
     }))
   );
 
