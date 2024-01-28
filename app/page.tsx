@@ -5,10 +5,10 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col p-24 w-xl max-w-4xl mx-auto">
       <div className="text-4xl font-semibold mt-12 mb-2">Mindreader</div>
       <div>
-        Can we interpret what's happening inside of vision transformers? This is
-        a simple project that explores the concepts being learned by individual
-        neurons in TinyCLIP. understand what the neurons inside vision
-        transformers are actually learning.
+        Can we interpret what&#39;s happening inside of vision transformers?
+        This is a simple project that explores the concepts being learned by
+        individual neurons, as a step towards understanding more fully how these
+        amazing models do what they do.
       </div>
       <div className="mt-8">
         <Link
