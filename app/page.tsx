@@ -4,7 +4,7 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col p-24 w-xl max-w-4xl mx-auto">
       <div className="text-4xl font-semibold mt-12 mb-2">Mindreader</div>
-      <div>
+      <div className="text-gray-700">
         Can we interpret what&#39;s happening inside of vision transformers?
         This is a simple project that explores the concepts being learned by
         individual neurons, as a step towards understanding more fully how these
