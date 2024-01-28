@@ -9,18 +9,26 @@ export default async function Page() {
   const topNeuronsForAllLayers = await Promise.all(
     layersPresent.map(async (layer) => ({
       name: layer,
-      neurons: await getNeuronsForLayer(layer, 10, 8),
+      neurons: await getNeuronsForLayer(layer, 20, 8),
     }))
   );
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-4xl font-bold text-left mt-32 mb-12">
-        Top Activating Neurons
+      <h1 className="text-4xl font-bold text-left mt-32 mb-4">
+        Top Activating Neurons for TinyCLIP
       </h1>
+      <div className="text-gray-700">
+        These are the neurons that fire most strongly across our image dataset,
+        for each layer of the model. The neuron fires most strongly for the
+        parts of each image highlighted in yellow. You can hover your mouse over
+        the image to reveal the original image, or click on one of the neuron's
+        cards to see how it activated on even more images. Look out for
+        high-level concepts the neuron consistently fires for across images!
+      </div>
       {topNeuronsForAllLayers.map((layer) => (
         <div key={`layer-${layer.name}`} className="mb-24">
-          <div className="text-xl font-semibold mt-20 mb-2">
+          <div className="text-xl font-semibold mt-12 mb-2">
             Layer: {layer.name}
           </div>
           {layer.neurons.map((neuron) => (
@@ -36,10 +44,6 @@ export default async function Page() {
                     <span className="text-gray-700">
                       {renderActivation(neuron.maxActivation)}
                     </span>
-                  </div>
-                  <div className="flex space-x-1">
-                    <span className="font-medium">Top Classes:</span>
-                    <span className="text-gray-700">{neuron.topClasses}</span>
                   </div>
                   <div className="flex flex-row flex-wrap mt-4">
                     {neuron.topActivations.map((activation, index) => (

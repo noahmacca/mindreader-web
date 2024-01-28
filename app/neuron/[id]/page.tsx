@@ -20,7 +20,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         </Link>
         <div className="text-4xl font-semibold">Neuron: {neuron.id}</div>
       </div>
-      <div>Fires most strongly for: {neuron.topClasses}</div>
 
       <div className="flex flex-row flex-wrap mt-8">
         {data.map((activation, index) => (
