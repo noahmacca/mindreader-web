@@ -55,7 +55,7 @@ export async function getNeuronsForLayer(
 }
 
 export async function fetchImagesById(ids: number[]) {
-  noStore();
+  // noStore();
 
   try {
     const data = await prisma.image.findMany({
