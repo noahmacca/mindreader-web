@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@prisma/client": "^5.8.1",
+    "@vercel/analytics": "^1.1.2",
     "@vercel/postgres": "^0.7.2",
     "next": "14.1.0",
     "prisma": "^5.8.1",
