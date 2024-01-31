@@ -7,13 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "seed": "node -r dotenv/config ./scripts/seed-sample.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "@prisma/client": "^5.8.1",
     "@vercel/analytics": "^1.1.2",
+    "@vercel/blob": "^0.20.0",
     "@vercel/postgres": "^0.7.2",
+    "dotenv": "^16.4.1",
     "next": "14.1.0",
     "prisma": "^5.8.1",
     "react": "^18",
