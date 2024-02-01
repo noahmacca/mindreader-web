@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "seed": "node -r dotenv/config ./scripts/seed-sample.mjs"
+    "seed": "node -r dotenv/config ./scripts/seed.mjs",
+    "seed-sample": "node -r dotenv/config ./scripts/seed-sample.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
