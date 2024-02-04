@@ -19,6 +19,10 @@ export default async function Page({ params }: { params: { id: string } }) {
           All Neurons
         </Link>
         <div className="text-4xl font-semibold">Neuron: {neuron.id}</div>
+        <div className="text-gray-700">
+          These are the images that had the maximum firing strength for this
+          particular neuron.
+        </div>
       </div>
 
       <div className="flex flex-row flex-wrap mt-8">
