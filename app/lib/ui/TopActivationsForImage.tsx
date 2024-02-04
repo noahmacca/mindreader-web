@@ -8,7 +8,7 @@ export default async function TopActivationsForImage({
 }: {
   imageId: number;
 }) {
-  const data = await fetchTopActivationsForImage(imageId, 100);
+  const data = await fetchTopActivationsForImage(imageId, 78);
 
   if (data.numActivations === 0) {
     throw new Error(`No image data found for id=${imageId}`);

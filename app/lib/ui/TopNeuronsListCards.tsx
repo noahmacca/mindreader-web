@@ -9,7 +9,7 @@ export default async function TopNeuronsListCards() {
   const topNeuronsForAllLayers = await Promise.all(
     layersPresent.map(async (layer) => ({
       name: layer,
-      neurons: await getNeuronsForLayer(layer, 20, 8),
+      neurons: await getNeuronsForLayer(layer, 15, 8),
     }))
   );
 

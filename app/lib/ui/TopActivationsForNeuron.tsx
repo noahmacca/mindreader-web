@@ -8,7 +8,7 @@ export default async function TopActivationsForNeuron({
 }: {
   neuronId: string;
 }) {
-  const data = await fetchTopActivationsForNeuron(neuronId, 100);
+  const data = await fetchTopActivationsForNeuron(neuronId, 78);
   if (data.length === 0) {
     throw new Error(`No neuron data found for id=${neuronId}`);
   }
