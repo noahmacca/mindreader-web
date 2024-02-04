@@ -1,5 +1,4 @@
 import prisma from "../lib/prisma";
-import { unstable_noStore as noStore } from "next/cache";
 
 function getLayersFromNeuronIds(neuronIds: Array<string>) {
   const layerSet = new Set<string>();
@@ -55,8 +54,6 @@ export async function getNeuronsForLayer(
 }
 
 export async function fetchImagesById(ids: number[]) {
-  // noStore();
-
   try {
     const data = await prisma.image.findMany({
       where: {
@@ -78,8 +75,6 @@ export async function fetchTopActivationsForNeuron(
   limit: number,
   imageId?: number
 ) {
-  // noStore();
-
   try {
     const data = await prisma.neuronImageActivation.findMany({
       where: {
@@ -103,12 +98,24 @@ export async function fetchTopActivationsForNeuron(
   }
 }
 
+export async function fetchImageInfo(imageId: number) {
+  try {
+    const image = await prisma.image.findFirst({
+      where: {
+        id: imageId,
+      },
+    });
+    return image;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("fetchImageInfo failed.");
+  }
+}
+
 export async function fetchTopActivationsForImage(
   imageId: number,
   limit: number
 ) {
-  // noStore();
-
   try {
     const layers = await getNeuronLayers();
 
