@@ -47,7 +47,7 @@ export default async function TopActivationsForImage({
   return (
     <div>
       {activationLevels.map((activationLevel) => (
-        <div>
+        <div key={`key-${activationLevel.activation_level}`}>
           <div className="text-md text-gray-500 mt-8">Activation Level</div>
           <div className="text-xl font-semibold">
             {activationLevel.activation_level}

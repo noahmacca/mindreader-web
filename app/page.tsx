@@ -8,10 +8,10 @@ export default async function Home() {
         Mindreader
       </h1>
       <p className="text-gray-700 text-sm md:text-base">
-        Can we interpret what's happening inside of vision transformers? This is
-        a simple project that explores the concepts being learned by individual
-        neurons, as a step towards understanding more fully how these amazing
-        models do what they do.
+        Can we interpret what&apos;s happening inside of vision transformers?
+        This is a simple project that explores the concepts being learned by
+        individual neurons, as a step towards understanding more fully how these
+        amazing models do what they do.
       </p>
       <div className="mt-8">
         <Link
