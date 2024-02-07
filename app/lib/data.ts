@@ -117,8 +117,6 @@ export async function fetchTopActivationsForImage(
   limit: number
 ) {
   try {
-    const layers = await getNeuronLayers();
-
     const activations = await prisma.neuronImageActivation.findMany({
       where: {
         imageId: imageId,
@@ -133,17 +131,10 @@ export async function fetchTopActivationsForImage(
       },
     });
 
-    const layerActivations = layers.map((layer) => ({
-      name: layer,
-      neuronActivations: activations.filter((item) =>
-        item.Neuron.id.includes(layer)
-      ),
-    }));
-
     return {
       image: activations[0].Image,
       numActivations: activations.length,
-      layerActivations,
+      activations,
     };
   } catch (error) {
     console.error("Database Error:", error);

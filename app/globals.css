@@ -23,3 +23,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.pixelated {
+  image-rendering: pixelated;
+}
