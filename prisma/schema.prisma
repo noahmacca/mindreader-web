@@ -4,16 +4,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url      = env("DATABASE_URL")
 }
 
 model Image {
   id                    Int                     @id @default(autoincrement())
   label                 String                  @db.VarChar
   predicted             String                  @db.VarChar
-  maxActivation         Float
-  data                  String                  @db.VarChar
   NeuronImageActivation NeuronImageActivation[]
 }
 
@@ -25,12 +22,10 @@ model Neuron {
 }
 
 model NeuronImageActivation {
-  id                     Int     @id @default(autoincrement())
-  neuronId               String  @db.VarChar
-  imageId                Int
-  maxActivation          Float
-  patchActivations       Float[]
-  patchActivationsScaled String  @db.VarChar
-  Image                  Image   @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "NeuronImageActivations_imageId_fkey")
-  Neuron                 Neuron  @relation(fields: [neuronId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "NeuronImageActivations_neuronId_fkey")
+  id            Int    @id @default(autoincrement())
+  neuronId      String @db.VarChar
+  imageId       Int
+  maxActivation Float
+  Image         Image  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Neuron        Neuron @relation(fields: [neuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
