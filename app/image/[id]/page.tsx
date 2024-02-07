@@ -25,11 +25,11 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
       <div>
-        <span className="font-medium">ID:</span>
+        <span className="font-medium">Image ID:</span>
         <span> {imageInfo.id}</span>
       </div>
       <div>
-        <span className="font-medium">Predicted: </span>
+        <span className="font-medium">Overall Model Prediction: </span>
         <span>
           {prettifyClass(imageInfo.predicted)}
           {imageInfo.label === imageInfo.predicted ? (
