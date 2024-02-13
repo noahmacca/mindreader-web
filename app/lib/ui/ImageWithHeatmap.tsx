@@ -10,6 +10,7 @@ export default function ImageWithHeatmap({
   return (
     <div className="relative inline-block rounded w-full">
       <Image
+        unoptimized
         src={`https://mindreader-web.s3.amazonaws.com/image/${imageId}.jpg`}
         alt="Mindreader Visualization"
         className="block w-full rounded"
@@ -18,6 +19,7 @@ export default function ImageWithHeatmap({
       />
       <div className="opacity-45 hover:opacity-0 transition-opacity duration-150">
         <Image
+          unoptimized
           src={`https://mindreader-web.s3.amazonaws.com/neuron-image-activation/neuron-${neuronId}-image-${imageId}.jpg`}
           alt="Activation heatmap"
           className="absolute top-0 left-0 w-full rounded pixelated"
