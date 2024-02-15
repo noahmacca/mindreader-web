@@ -3,22 +3,48 @@ import Link from "next/link";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 import { renderActivation } from "@/app/lib/helpers";
 
-export default async function TopNeuronsListCards() {
-  const layersPresent = await getNeuronLayers();
-
-  const topNeuronsForAllLayers = await Promise.all(
-    layersPresent.map(async (layer) => ({
-      name: layer,
-      neurons: await getNeuronsForLayer(layer, 50, 10),
-    }))
-  );
+export default async function TopNeuronsListCards({
+  layerId,
+  countNeuronsPerLayer,
+}: {
+  layerId?: string;
+  countNeuronsPerLayer: number;
+}) {
+  const layersPresent = (await getNeuronLayers()).sort();
+  const isValidLayerIdPresent = layerId && layersPresent.includes(layerId);
+  let topNeuronsForAllLayers;
+  if (!layerId) {
+    topNeuronsForAllLayers = await Promise.all(
+      layersPresent.map(async (layer) => ({
+        name: layer,
+        neurons: await getNeuronsForLayer(layer, countNeuronsPerLayer, 10),
+      }))
+    );
+  } else if (isValidLayerIdPresent) {
+    topNeuronsForAllLayers = [
+      {
+        name: layerId,
+        neurons: await getNeuronsForLayer(layerId, countNeuronsPerLayer, 10),
+      },
+    ];
+  } else {
+    throw new Error(`Layer with id=${layerId} is not present.`);
+  }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-24">
       {topNeuronsForAllLayers.map((layer) => (
-        <div key={`layer-${layer.name}`} className="mb-24 w-full">
-          <div className="text-md text-gray-500 mt-8">Layer</div>
-          <div className="text-xl font-semibold">{layer.name}</div>
+        <div key={`layer-${layer.name}`} className=" w-full my-12">
+          {!isValidLayerIdPresent && (
+            <>
+              <div className="text-md text-gray-500 mt-8">Layer</div>
+              <Link href={`/layer/${layer.name}`}>
+                <div className="text-xl font-semibold text-blue-600 hover:text-blue-800 cursor-pointer">
+                  {layer.name}
+                </div>
+              </Link>
+            </>
+          )}
           <div className="grid gap-1 lg:gap-2 mt-1">
             {layer.neurons.map((neuron) => (
               <Link
