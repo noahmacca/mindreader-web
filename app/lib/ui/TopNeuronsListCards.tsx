@@ -14,12 +14,11 @@ export default async function TopNeuronsListCards({
   const isValidLayerIdPresent = layerId && layersPresent.includes(layerId);
   let topNeuronsForAllLayers;
   if (!layerId) {
-    topNeuronsForAllLayers = await Promise.all(
-      layersPresent.map(async (layer) => ({
-        name: layer,
-        neurons: await getNeuronsForLayer(layer, countNeuronsPerLayer, 10),
-      }))
-    );
+    topNeuronsForAllLayers = [];
+    for (const layer of layersPresent) {
+      const neurons = await getNeuronsForLayer(layer, countNeuronsPerLayer, 10);
+      topNeuronsForAllLayers.push({ name: layer, neurons });
+    }
   } else if (isValidLayerIdPresent) {
     topNeuronsForAllLayers = [
       {

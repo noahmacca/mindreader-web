@@ -1,19 +1,17 @@
 import prisma from "../lib/prisma";
 
-function getLayersFromNeuronIds(neuronIds: Array<string>) {
-  const layerSet = new Set<string>();
-  neuronIds.forEach((neuronId) => {
-    const parts = neuronId.split("_");
-    if (parts.length > 1) {
-      layerSet.add(parts.slice(0, 2).join("_"));
-    }
-  });
-  return Array.from(layerSet);
-}
-
 export async function getNeuronLayers(): Promise<string[]> {
-  const neurons = await prisma.neuron.findMany();
-  return getLayersFromNeuronIds(neurons.map((neuron) => neuron.id));
+  const neurons = await prisma.neuron.findMany({
+    select: {
+      id: true,
+    },
+  });
+  const layerSet = new Set(
+    neurons.map((neuron) => neuron.id.split("_").slice(0, 2).join("_"))
+  );
+  const layers = Array.from(layerSet).sort();
+
+  return layers;
 }
 
 export async function getNeuronsForLayer(
