@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Image {
@@ -16,10 +16,12 @@ model Image {
 }
 
 model Neuron {
-  id                    String                  @id @db.VarChar
-  topClasses            String                  @db.VarChar
-  maxActivation         Float
-  NeuronImageActivation NeuronImageActivation[]
+  id                                                        String                  @id @db.VarChar
+  topClasses                                                String                  @db.VarChar
+  maxActivation                                             Float
+  NeuronCorrelation_NeuronCorrelation_endNeuronIdToNeuron   NeuronCorrelation[]     @relation("NeuronCorrelation_endNeuronIdToNeuron")
+  NeuronCorrelation_NeuronCorrelation_startNeuronIdToNeuron NeuronCorrelation[]     @relation("NeuronCorrelation_startNeuronIdToNeuron")
+  NeuronImageActivation                                     NeuronImageActivation[]
 }
 
 model NeuronImageActivation {
@@ -29,4 +31,14 @@ model NeuronImageActivation {
   maxActivation Float
   Image         Image  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Neuron        Neuron @relation(fields: [neuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model NeuronCorrelation {
+  id                                             Int     @id @default(autoincrement())
+  startNeuronId                                  String  @db.VarChar
+  endNeuronId                                    String  @db.VarChar
+  corr                                           Float
+  isUpstream                                     Boolean
+  Neuron_NeuronCorrelation_endNeuronIdToNeuron   Neuron  @relation("NeuronCorrelation_endNeuronIdToNeuron", fields: [endNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Neuron_NeuronCorrelation_startNeuronIdToNeuron Neuron  @relation("NeuronCorrelation_startNeuronIdToNeuron", fields: [startNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

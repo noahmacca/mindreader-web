@@ -139,3 +139,62 @@ export async function fetchTopActivationsForImage(
     throw new Error("Failed to fetch neuron data.");
   }
 }
+
+export async function fetchTopCorrsForNeuron(id: string, top_n: number) {
+  try {
+    const neuronCorrs = await prisma.neuronCorrelation.findMany({
+      where: {
+        startNeuronId: id,
+      },
+    });
+
+    const upstreamCorrs = neuronCorrs
+      .filter((corr) => corr.isUpstream)
+      .sort((a, b) => b.corr - a.corr)
+      .slice(0, top_n);
+
+    const upstreamCorrsActivations = await Promise.all(
+      upstreamCorrs.map(async (corr) => ({
+        neuronId: corr.endNeuronId,
+        corr: corr.corr,
+        activations: await prisma.neuronImageActivation.findMany({
+          where: {
+            neuronId: corr.endNeuronId,
+          },
+          orderBy: {
+            maxActivation: "desc",
+          },
+          take: 5,
+        }),
+      }))
+    );
+    const downstreamCorrs = neuronCorrs
+      .filter((corr) => !corr.isUpstream)
+      .sort((a, b) => b.corr - a.corr)
+      .slice(0, top_n);
+
+    const downstreamCorrsActivations = await Promise.all(
+      downstreamCorrs.map(async (corr) => ({
+        neuronId: corr.endNeuronId,
+        corr: corr.corr,
+        activations: await prisma.neuronImageActivation.findMany({
+          where: {
+            neuronId: corr.endNeuronId,
+          },
+          orderBy: {
+            maxActivation: "desc",
+          },
+          take: 5,
+        }),
+      }))
+    );
+
+    return {
+      upstreamCorrsActivations,
+      downstreamCorrsActivations,
+    };
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch neuron correlations.");
+  }
+}
