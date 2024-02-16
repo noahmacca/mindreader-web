@@ -9,16 +9,13 @@ export default async function Page() {
         Top Activating Neurons for TinyCLIP
       </h1>
       <div className="text-gray-700 text-sm sm:text-base">
-        These are the neurons that fire most strongly across our image dataset,
-        for each layer of the model. The neuron fires most strongly for the
-        parts of each image highlighted in yellow. You can hover your mouse over
-        the image to reveal the original image, or click on one of the
-        neuron&apos;s cards to see how it activated on even more images. Look
-        out for high-level concepts the neuron consistently fires for across
-        images!
+        These are the neurons that fire most within each layer, on this dataset.
+        The parts of the image highlighted in yellow indicate the patches where
+        the neuron fired most strongly. Look out for high-level concepts the
+        neuron consistently fires for across images!
       </div>
       <Suspense fallback={<LoadingSpinner />}>
-        <TopNeuronsListCards countNeuronsPerLayer={3} />
+        <TopNeuronsListCards countNeuronsPerLayer={4} />
       </Suspense>
     </main>
   );

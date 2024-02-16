@@ -25,8 +25,14 @@ export default async function TopActivationsForImage({
 
   const sortedData = data.activations.reduce((acc: SortedData, item) => {
     let activationLevel;
-    if (item.maxActivation > 3.0) {
-      activationLevel = "Very High (>3.0)";
+    if (item.maxActivation > 6.0) {
+      activationLevel = "Very High (>6.0)";
+    } else if (item.maxActivation > 5.0) {
+      activationLevel = "Very High (>5.0)";
+    } else if (item.maxActivation > 4.0) {
+      activationLevel = "Very High (>4.0)";
+    } else if (item.maxActivation > 3.0) {
+      activationLevel = "High (>3.0)";
     } else if (item.maxActivation > 2.0) {
       activationLevel = "High (>2.0)";
     } else if (item.maxActivation > 1.0) {
@@ -49,23 +55,25 @@ export default async function TopActivationsForImage({
       {activationLevels.map((activationLevel) => (
         <div key={`key-${activationLevel.activation_level}`}>
           <div className="text-md text-gray-500 mt-8">Activation Level</div>
-          <div className="text-xl font-semibold">
+          <div className="text-xl font-semibold mb-2">
             {activationLevel.activation_level}
           </div>
-          <div className="flex flex-row flex-wrap">
+          <div className="flex flex-row flex-wrap gap-2 ml-2 lg:ml-4">
             {activationLevel.data.map((activation, index) => (
               <Link
                 href={`/neuron/${activation.Neuron.id}`}
                 key={index}
-                className="w-24 lg:w-36 rounded overflow-hidden shadow-lg my-2 mr-2 transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
+                className="w-36 lg:w-48 rounded overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-0.5 cursor-pointer bg-gray-50"
               >
                 <ImageWithHeatmap
                   imageId={activation.Image.id}
                   neuronId={activation.Neuron.id}
                 />
-                <div className="px-2 py-1 text-xs text-gray-700">
-                  <div>{activation.Neuron.id}</div>
-                  <div>{renderActivation(activation.maxActivation)}</div>
+                <div className="px-2 pb-1 text-xs text-gray-700">
+                  <div>
+                    Layer {activation.Neuron.id.split("_")[0]}, Neuron{" "}
+                    {activation.Neuron.id.split("_").pop()}
+                  </div>
                 </div>
               </Link>
             ))}
