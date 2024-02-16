@@ -66,7 +66,7 @@ export default async function TopNeuronsListCards({
                     {neuron.topActivations.map((activation, index) => (
                       <div
                         key={`key-${activation.id}`}
-                        className="flex-none w-28 rounded mr-1 mb-1 lg:mr-2"
+                        className="flex-none w-20 lg:w-28 rounded mr-1 mb-1 lg:mr-2"
                       >
                         <ImageWithHeatmap
                           imageId={activation.Image.id}
