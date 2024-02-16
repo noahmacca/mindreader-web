@@ -1,7 +1,6 @@
 import { getNeuronLayers, getNeuronsForLayer } from "@/app/lib/data";
 import Link from "next/link";
-import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
-import { renderActivation } from "@/app/lib/helpers";
+import NeuronPreviewCarousel from "@/app/lib/ui/NeuronPreviewCarousel";
 
 export default async function TopNeuronsListCards({
   layerId,
@@ -47,37 +46,13 @@ export default async function TopNeuronsListCards({
               </Link>
             </div>
           )}
-          <div
-            className={`grid gap-1 lg:gap-2 mt-1 ${
-              !isValidLayerIdPresent ? "ml-2 lg:ml-4" : ""
-            }`}
-          >
-            {layer.neurons.map((neuron) => (
-              <Link
-                className="rounded overflow-hidden shadow-lg cursor-pointer bg-gray-50 hover:bg-gray-200 transform transition duration-200 ease-in-out"
-                href={`/neuron/${neuron.id}`}
-                key={`card-${neuron.id}`}
-              >
-                <div className="p-2 lg:px-4 text-sm">
-                  <span className="font-medium">
-                    Neuron {neuron.id.split("_").pop()}
-                  </span>
-                  <div className="flex flex-row overflow-x-auto mt-1">
-                    {neuron.topActivations.map((activation, index) => (
-                      <div
-                        key={`key-${activation.id}`}
-                        className="flex-none w-20 lg:w-28 rounded mr-1 mb-1 lg:mr-2"
-                      >
-                        <ImageWithHeatmap
-                          imageId={activation.Image.id}
-                          neuronId={activation.Neuron.id}
-                          noHover
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Link>
+          <div className="grid gap-1 lg:gap-2">
+            {layer.neurons.map((neuronWithActivations) => (
+              <div key={neuronWithActivations.id}>
+                <NeuronPreviewCarousel
+                  neuronWithActivations={neuronWithActivations}
+                />
+              </div>
             ))}
           </div>
         </div>
