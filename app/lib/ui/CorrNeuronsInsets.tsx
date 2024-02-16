@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CorrNeuronsWithActivations } from "@/app/lib/types";
 import NeuronPreviewCarousel from "@/app/lib/ui/NeuronPreviewCarousel";
 
@@ -9,8 +9,18 @@ export default function CorrNeuronsInsets({
 }: {
   corrNeuronsWithActivations: CorrNeuronsWithActivations;
 }) {
-  const [activeTab, setActiveTab] = useState("upstream");
+  const [activeTab, setActiveTab] = useState(
+    corrNeuronsWithActivations.upstreamCorrNeurons.length > 0
+      ? "upstream"
+      : "downstream"
+  );
   const [showMore, setShowMore] = useState(false);
+
+  useEffect(() => {
+    if (corrNeuronsWithActivations.upstreamCorrNeurons.length === 0) {
+      setActiveTab("downstream");
+    }
+  }, [corrNeuronsWithActivations.upstreamCorrNeurons]);
 
   const renderNeurons = (neurons: any) => {
     const visibleNeurons = showMore ? neurons : neurons.slice(0, 1);
@@ -23,6 +33,8 @@ export default function CorrNeuronsInsets({
       </div>
     ));
   };
+
+  const hasMultipleNeurons = (neurons: any) => neurons.length > 1;
 
   return (
     <div className="bg-gray-100 p-2 lg:p-4 rounded-lg shadow">
@@ -58,14 +70,20 @@ export default function CorrNeuronsInsets({
         {activeTab === "downstream" &&
           renderNeurons(corrNeuronsWithActivations.downstreamCorrNeurons)}
       </div>
-      <div className="flex justify-center mt-4">
-        <button
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
-          onClick={() => setShowMore(!showMore)}
-        >
-          {showMore ? "See Less ▲" : "See More ▼"}
-        </button>
-      </div>
+      {hasMultipleNeurons(
+        activeTab === "upstream"
+          ? corrNeuronsWithActivations.upstreamCorrNeurons
+          : corrNeuronsWithActivations.downstreamCorrNeurons
+      ) && (
+        <div className="flex justify-center mt-4">
+          <button
+            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+            onClick={() => setShowMore(!showMore)}
+          >
+            {showMore ? "See Less ▲" : "See More ▼"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

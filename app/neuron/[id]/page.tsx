@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
 import Footer from "@/app/lib/ui/Footer";
 import { fetchTopCorrsForNeuron } from "@/app/lib/data";
-import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
 import CorrNeuronsInsets from "@/app/lib/ui/CorrNeuronsInsets";
 
@@ -18,8 +17,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <main className="flex min-h-screen flex-col p-4 md:p-24">
       <div className="mt-12 mb-3">
-        <Link href="/neuron" className="text-blue-600 hover:text-blue-800 mb-2">
-          All Layers
+        <Link
+          href={`/layer/${layerId}_FC1`}
+          className="text-blue-600 hover:text-blue-800 mb-2"
+        >
+          Layer {layerId}
         </Link>
         <div className="text-2xl md:text-4xl font-semibold">
           Layer {layerId}, Neuron {neuronId}

@@ -32,7 +32,7 @@ export default function NeuronPreviewCarousel({
           {neuronWithActivations.id.split("_").pop()}
           <span className="text-gray-500">
             {neuronWithActivations.corr &&
-              ` Correlation: ${neuronWithActivations.corr.toFixed(2)}`}
+              ` Correlation: ${neuronWithActivations.corr.toFixed(3)}`}
           </span>
         </span>
         <div className="flex flex-row overflow-x-auto mt-1">
