@@ -1,23 +1,12 @@
 import Link from "next/link";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
+import { NeuronImageActivation, Neuron, Image } from "@prisma/client";
+
 type NeuronWithActivationsType = {
-  topActivations: ({
-    Neuron: {
-      id: string;
-      topClasses: string;
-      maxActivation: number;
-    };
-    Image: {
-      id: number;
-      label: string;
-      predicted: string;
-    };
-  } & {
-    id: number;
-    neuronId: string;
-    imageId: number;
-    maxActivation: number;
+  topActivations: (NeuronImageActivation & {
+    Neuron: Neuron;
+    Image: Image;
   })[];
   id: string;
   topClasses: string;
