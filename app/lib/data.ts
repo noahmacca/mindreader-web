@@ -153,18 +153,24 @@ export async function fetchTopCorrsForNeuron(id: string, top_n: number) {
       .sort((a, b) => b.corr - a.corr)
       .slice(0, top_n);
 
-    const upstreamCorrsActivations = await Promise.all(
+    const n_images_per_neuron = 20;
+
+    const upstreamCorrNeurons = await Promise.all(
       upstreamCorrs.map(async (corr) => ({
-        neuronId: corr.endNeuronId,
+        id: corr.endNeuronId,
         corr: corr.corr,
-        activations: await prisma.neuronImageActivation.findMany({
+        topActivations: await prisma.neuronImageActivation.findMany({
           where: {
             neuronId: corr.endNeuronId,
           },
           orderBy: {
             maxActivation: "desc",
           },
-          take: 5,
+          take: n_images_per_neuron,
+          include: {
+            Image: true,
+            Neuron: true,
+          },
         }),
       }))
     );
@@ -173,25 +179,29 @@ export async function fetchTopCorrsForNeuron(id: string, top_n: number) {
       .sort((a, b) => b.corr - a.corr)
       .slice(0, top_n);
 
-    const downstreamCorrsActivations = await Promise.all(
+    const downstreamCorrNeurons = await Promise.all(
       downstreamCorrs.map(async (corr) => ({
-        neuronId: corr.endNeuronId,
+        id: corr.endNeuronId,
         corr: corr.corr,
-        activations: await prisma.neuronImageActivation.findMany({
+        topActivations: await prisma.neuronImageActivation.findMany({
           where: {
             neuronId: corr.endNeuronId,
           },
           orderBy: {
             maxActivation: "desc",
           },
-          take: 5,
+          take: n_images_per_neuron,
+          include: {
+            Image: true,
+            Neuron: true,
+          },
         }),
       }))
     );
 
     return {
-      upstreamCorrsActivations,
-      downstreamCorrsActivations,
+      upstreamCorrNeurons,
+      downstreamCorrNeurons,
     };
   } catch (error) {
     console.error("Database Error:", error);

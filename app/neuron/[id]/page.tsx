@@ -6,12 +6,14 @@ import Footer from "@/app/lib/ui/Footer";
 import { fetchTopCorrsForNeuron } from "@/app/lib/data";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
+import CorrNeuronsInsets from "@/app/lib/ui/CorrNeuronsInsets";
+
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const layerId = id.split("_")[0];
   const neuronId = id.split("_").pop();
 
-  const corrData = await fetchTopCorrsForNeuron(id, 5);
+  const corrData = await fetchTopCorrsForNeuron(id, 7);
 
   return (
     <main className="flex min-h-screen flex-col p-4 md:p-24">
@@ -27,25 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
       <div>
-        <div>Correlated neurons</div>
-        <div>Upstream</div>
-        {corrData.upstreamCorrsActivations.map((upstreamCorr) => (
-          // These are neurons
-          <div key={upstreamCorr.neuronId}>
-            Neuron: {upstreamCorr.neuronId}
-            Correlation: {upstreamCorr.corr}
-            <div className="flex flex-row">
-              {upstreamCorr.activations.map((act) => (
-                <div key={1} className="w-20">
-                  <ImageWithHeatmap
-                    imageId={act.imageId}
-                    neuronId={act.neuronId}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+        <CorrNeuronsInsets corrNeuronsWithActivations={corrData} />
       </div>
       <Suspense fallback={<LoadingSpinner />}>
         <TopActivationsForNeuron neuronId={id} />

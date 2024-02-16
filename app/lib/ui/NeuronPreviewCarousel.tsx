@@ -1,24 +1,22 @@
+"use-client";
+
 import Link from "next/link";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
-import { NeuronImageActivation, Neuron, Image } from "@prisma/client";
-
-type NeuronWithActivationsType = {
-  topActivations: (NeuronImageActivation & {
-    Neuron: Neuron;
-    Image: Image;
-  })[];
-  id: string;
-  topClasses: string;
-  maxActivation: number;
-};
+import { NeuronWithActivationsType } from "@/app/lib/types";
 
 export default function NeuronPreviewCarousel({
   neuronWithActivations,
+  shouldIndent,
 }: {
   neuronWithActivations: NeuronWithActivationsType;
+  shouldIndent: boolean;
 }) {
-  const isValidLayerIdPresent = false;
+  console.log(
+    "NeuronPreviewCarousel",
+    neuronWithActivations.id,
+    neuronWithActivations.corr
+  );
   return (
     <Link
       className="overflow-hidden cursor-pointer"
@@ -26,11 +24,16 @@ export default function NeuronPreviewCarousel({
     >
       <div
         className={`p-2 lg:px-4 text-sm bg-gray-200 hover:bg-purple-200 rounded transition duration-200 ease-in-out ${
-          !isValidLayerIdPresent ? "ml-2 lg:ml-4" : ""
+          shouldIndent ? "ml-2 lg:ml-4" : ""
         }`}
       >
         <span className="font-medium">
-          Neuron {neuronWithActivations.id.split("_").pop()}
+          Layer {neuronWithActivations.id.split("_")[0]} Neuron{" "}
+          {neuronWithActivations.id.split("_").pop()}
+          <span className="text-gray-500">
+            {neuronWithActivations.corr &&
+              ` Correlation: ${neuronWithActivations.corr.toFixed(2)}`}
+          </span>
         </span>
         <div className="flex flex-row overflow-x-auto mt-1">
           {neuronWithActivations.topActivations.map((activation, index) => (

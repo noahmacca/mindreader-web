@@ -54,7 +54,7 @@ export default async function TopActivationsForNeuron({
       {activationLevels.map((activationLevel) => (
         <div key={`key-${activationLevel.activation_level}`}>
           <div className="text-md text-gray-500 mt-8 mb-0">
-            Activation Level
+            Neuron Activation Level
           </div>
           <div className="text-xl font-semibold mb-2">
             {activationLevel.activation_level}
