@@ -5,6 +5,7 @@ import TopActivationsForImage from "@/app/lib/ui/TopActivationsForImage";
 import { prettifyClass } from "@/app/lib/helpers";
 import { Suspense } from "react";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
+import Footer from "@/app/lib/ui/Footer";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -42,6 +43,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <Suspense fallback={<LoadingSpinner />}>
         <TopActivationsForImage imageId={id} />
       </Suspense>
+      <Footer />
     </main>
   );
 }

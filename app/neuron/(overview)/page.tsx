@@ -1,6 +1,7 @@
 import TopNeuronsListCards from "@/app/lib/ui/TopNeuronsListCards";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
 import { Suspense } from "react";
+import Footer from "@/app/lib/ui/Footer";
 
 export default async function Page() {
   return (
@@ -17,6 +18,7 @@ export default async function Page() {
       <Suspense fallback={<LoadingSpinner />}>
         <TopNeuronsListCards countNeuronsPerLayer={4} />
       </Suspense>
+      <Footer />
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Footer from "./lib/ui/Footer";
 
 export default async function Home() {
   return (
@@ -24,6 +25,7 @@ export default async function Home() {
       <div className="mt-4 italic text-gray-400 text-xs md:text-sm">
         More coming soon...
       </div>
+      <Footer />
     </main>
   );
 }

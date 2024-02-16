@@ -16,14 +16,14 @@ export default async function TopNeuronsListCards({
   if (!layerId) {
     topNeuronsForAllLayers = [];
     for (const layer of layersPresent) {
-      const neurons = await getNeuronsForLayer(layer, countNeuronsPerLayer, 20);
+      const neurons = await getNeuronsForLayer(layer, countNeuronsPerLayer, 18);
       topNeuronsForAllLayers.push({ name: layer, neurons });
     }
   } else if (isValidLayerIdPresent) {
     topNeuronsForAllLayers = [
       {
         name: layerId,
-        neurons: await getNeuronsForLayer(layerId, countNeuronsPerLayer, 20),
+        neurons: await getNeuronsForLayer(layerId, countNeuronsPerLayer, 18),
       },
     ];
   } else {
@@ -66,7 +66,7 @@ export default async function TopNeuronsListCards({
                     {neuron.topActivations.map((activation, index) => (
                       <div
                         key={`key-${activation.id}`}
-                        className="flex-none w-20 rounded mr-1 mb-1 lg:mr-2"
+                        className="flex-none w-24 rounded mr-1 mb-1 lg:mr-2"
                       >
                         <ImageWithHeatmap
                           imageId={activation.Image.id}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import TopActivationsForNeuron from "@/app/lib/ui/TopActivationsForNeuron";
 import { Suspense } from "react";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
+import Footer from "@/app/lib/ui/Footer";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -24,6 +25,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <Suspense fallback={<LoadingSpinner />}>
         <TopActivationsForNeuron neuronId={id} />
       </Suspense>
+      <Footer />
     </main>
   );
 }
