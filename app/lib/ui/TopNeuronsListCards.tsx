@@ -46,7 +46,7 @@ export default async function TopNeuronsListCards({
               </Link>
             </div>
           )}
-          <div className="grid gap-1 lg:gap-2">
+          <div className="flex flex-col space-y-1 lg:space-y-2 rounded mb-2">
             {layer.neurons.map((neuronWithActivations) => (
               <div key={neuronWithActivations.id}>
                 <NeuronPreviewCarousel
