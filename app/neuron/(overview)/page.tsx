@@ -16,7 +16,7 @@ export default async function Page() {
         neuron consistently fires for across images!
       </div>
       <Suspense fallback={<LoadingSpinner />}>
-        <TopNeuronsListCards countNeuronsPerLayer={4} />
+        <TopNeuronsListCards countNeuronsPerLayer={3} />
       </Suspense>
       <Footer />
     </main>

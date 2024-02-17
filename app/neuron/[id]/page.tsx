@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           href={`/layer/${layerId}_FC1`}
           className="text-blue-600 hover:text-blue-800 mb-2"
         >
-          Layer {layerId}
+          Back to layer {layerId}
         </Link>
         <div className="text-2xl md:text-4xl font-semibold">
           Layer {layerId}, Neuron {neuronId}

@@ -12,11 +12,6 @@ export default function NeuronPreviewCarousel({
   neuronWithActivations: NeuronWithActivationsType;
   shouldIndent: boolean;
 }) {
-  console.log(
-    "NeuronPreviewCarousel",
-    neuronWithActivations.id,
-    neuronWithActivations.corr
-  );
   return (
     <Link
       className="overflow-hidden cursor-pointer"
