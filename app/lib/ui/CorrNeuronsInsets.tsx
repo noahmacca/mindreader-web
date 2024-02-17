@@ -55,7 +55,7 @@ export default function CorrNeuronsInsets({
   };
 
   return (
-    <div className="bg-gray-100 p-2 lg:p-4 rounded-lg shadow">
+    <div className="bg-white p-2 lg:p-4 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-1 lg:mb-2">Correlated Neurons</h2>
       <div className="mb-2 lg:mb-4 flex flex-row items-center space-x-0">
         <label className="inline-block mr-2 text-sm font-medium text-gray-600">

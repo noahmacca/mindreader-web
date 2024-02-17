@@ -51,7 +51,7 @@ export default async function TopNeuronsListCards({
               <div key={neuronWithActivations.id}>
                 <NeuronPreviewCarousel
                   neuronWithActivations={neuronWithActivations}
-                  shouldIndent={true}
+                  shouldIndent={!isValidLayerIdPresent}
                 />
               </div>
             ))}
