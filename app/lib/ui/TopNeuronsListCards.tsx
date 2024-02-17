@@ -34,7 +34,7 @@ export default async function TopNeuronsListCards({
       {topNeuronsForAllLayers.map((layer) => (
         <div key={`layer-${layer.name}`} className=" w-full my-8">
           {!isValidLayerIdPresent && (
-            <div className="flex flex-row items-center mb-4">
+            <div className="flex flex-row items-center mb-2 lg:mb-4">
               <div className="text-2xl lg:text-3xl font-semibold ">
                 Layer {layer.name.split("_")[0]}
               </div>

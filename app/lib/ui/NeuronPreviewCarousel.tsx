@@ -19,7 +19,7 @@ export default function NeuronPreviewCarousel({
     >
       <div
         className={`p-2 lg:px-4 text-sm bg-gray-200 hover:bg-gray-300 rounded transition duration-200 ease-in-out ${
-          shouldIndent ? "ml-2 lg:ml-4" : ""
+          shouldIndent ? "lg:ml-4" : ""
         }`}
       >
         <span className="font-medium">
