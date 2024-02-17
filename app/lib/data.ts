@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma";
+import { layer_location_enum } from "@prisma/client";
 
 export async function getNeuronLayers(): Promise<string[]> {
   const neurons = await prisma.neuron.findMany({
@@ -140,6 +141,43 @@ export async function fetchTopActivationsForImage(
   }
 }
 
+type NeuronCorrelation = {
+  endNeuronId: string;
+  corr: number;
+  layerLocation: layer_location_enum;
+};
+
+const getCorrNeurons = async (
+  corrs: NeuronCorrelation[],
+  nNeurons: number,
+  layerLocation: layer_location_enum
+) => {
+  const n_images_per_neuron = 20;
+  return await Promise.all(
+    corrs
+      .filter((corr: NeuronCorrelation) => corr.layerLocation === layerLocation)
+      .sort((a: NeuronCorrelation, b: NeuronCorrelation) => b.corr - a.corr)
+      .slice(0, nNeurons)
+      .map(async (corr: NeuronCorrelation) => ({
+        id: corr.endNeuronId,
+        corr: corr.corr,
+        topActivations: await prisma.neuronImageActivation.findMany({
+          where: {
+            neuronId: corr.endNeuronId,
+          },
+          orderBy: {
+            maxActivation: "desc",
+          },
+          take: n_images_per_neuron,
+          include: {
+            Image: true,
+            Neuron: true,
+          },
+        }),
+      }))
+  );
+};
+
 export async function fetchTopCorrsForNeuron(id: string, top_n: number) {
   try {
     const neuronCorrs = await prisma.neuronCorrelation.findMany({
@@ -148,60 +186,26 @@ export async function fetchTopCorrsForNeuron(id: string, top_n: number) {
       },
     });
 
-    const upstreamCorrs = neuronCorrs
-      .filter((corr) => corr.isUpstream)
-      .sort((a, b) => b.corr - a.corr)
-      .slice(0, top_n);
-
-    const n_images_per_neuron = 20;
-
-    const upstreamCorrNeurons = await Promise.all(
-      upstreamCorrs.map(async (corr) => ({
-        id: corr.endNeuronId,
-        corr: corr.corr,
-        topActivations: await prisma.neuronImageActivation.findMany({
-          where: {
-            neuronId: corr.endNeuronId,
-          },
-          orderBy: {
-            maxActivation: "desc",
-          },
-          take: n_images_per_neuron,
-          include: {
-            Image: true,
-            Neuron: true,
-          },
-        }),
-      }))
+    const upstreamCorrNeurons = await getCorrNeurons(
+      neuronCorrs,
+      top_n,
+      layer_location_enum.LOWER
     );
-    const downstreamCorrs = neuronCorrs
-      .filter((corr) => !corr.isUpstream)
-      .sort((a, b) => b.corr - a.corr)
-      .slice(0, top_n);
-
-    const downstreamCorrNeurons = await Promise.all(
-      downstreamCorrs.map(async (corr) => ({
-        id: corr.endNeuronId,
-        corr: corr.corr,
-        topActivations: await prisma.neuronImageActivation.findMany({
-          where: {
-            neuronId: corr.endNeuronId,
-          },
-          orderBy: {
-            maxActivation: "desc",
-          },
-          take: n_images_per_neuron,
-          include: {
-            Image: true,
-            Neuron: true,
-          },
-        }),
-      }))
+    const downstreamCorrNeurons = await getCorrNeurons(
+      neuronCorrs,
+      top_n,
+      layer_location_enum.HIGHER
+    );
+    const sameLayerCorrNeurons = await getCorrNeurons(
+      neuronCorrs,
+      top_n,
+      layer_location_enum.SAME
     );
 
     return {
       upstreamCorrNeurons,
       downstreamCorrNeurons,
+      sameLayerCorrNeurons,
     };
   } catch (error) {
     console.error("Database Error:", error);

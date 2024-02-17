@@ -1,6 +1,7 @@
 export type CorrNeuronsWithActivations = {
   upstreamCorrNeurons: NeuronWithActivationsType[];
   downstreamCorrNeurons: NeuronWithActivationsType[];
+  sameLayerCorrNeurons: NeuronWithActivationsType[];
 };
 
 export type NeuronWithActivationsType = {

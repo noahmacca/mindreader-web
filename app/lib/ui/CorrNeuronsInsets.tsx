@@ -12,15 +12,28 @@ export default function CorrNeuronsInsets({
   const [activeTab, setActiveTab] = useState(
     corrNeuronsWithActivations.upstreamCorrNeurons.length > 0
       ? "upstream"
-      : "downstream"
+      : corrNeuronsWithActivations.downstreamCorrNeurons.length > 0
+      ? "downstream"
+      : "sameLayer"
   );
   const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
-    if (corrNeuronsWithActivations.upstreamCorrNeurons.length === 0) {
+    if (
+      corrNeuronsWithActivations.upstreamCorrNeurons.length === 0 &&
+      corrNeuronsWithActivations.downstreamCorrNeurons.length > 0
+    ) {
       setActiveTab("downstream");
+    } else if (
+      corrNeuronsWithActivations.upstreamCorrNeurons.length === 0 &&
+      corrNeuronsWithActivations.downstreamCorrNeurons.length === 0
+    ) {
+      setActiveTab("sameLayer");
     }
-  }, [corrNeuronsWithActivations.upstreamCorrNeurons]);
+  }, [
+    corrNeuronsWithActivations.upstreamCorrNeurons,
+    corrNeuronsWithActivations.downstreamCorrNeurons,
+  ]);
 
   const renderNeurons = (neurons: any) => {
     const visibleNeurons = showMore ? neurons : neurons.slice(0, 1);
@@ -36,6 +49,11 @@ export default function CorrNeuronsInsets({
 
   const hasMultipleNeurons = (neurons: any) => neurons.length > 1;
 
+  const handleTabClick = (tabName: string) => {
+    setActiveTab(tabName);
+    setShowMore(tabName === activeTab ? !showMore : true); // Expand the view when a filter button is clicked
+  };
+
   return (
     <div className="bg-gray-100 p-2 lg:p-4 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-1 lg:mb-2">Correlated Neurons</h2>
@@ -49,9 +67,19 @@ export default function CorrNeuronsInsets({
               ? "text-gray-700 bg-white shadow"
               : "text-gray-400 bg-transparent"
           }`}
-          onClick={() => setActiveTab("upstream")}
+          onClick={() => handleTabClick("upstream")}
         >
-          Upstream Layers
+          Earler Layers
+        </button>
+        <button
+          className={`py-1 px-2 text-sm rounded-md ${
+            activeTab === "sameLayer"
+              ? "text-gray-700 bg-white shadow"
+              : "text-gray-400 bg-transparent"
+          }`}
+          onClick={() => handleTabClick("sameLayer")}
+        >
+          Same Layer
         </button>
         <button
           className={`py-1 px-2 text-sm rounded-md ${
@@ -59,9 +87,9 @@ export default function CorrNeuronsInsets({
               ? "text-gray-700 bg-white shadow"
               : "text-gray-400 bg-transparent"
           }`}
-          onClick={() => setActiveTab("downstream")}
+          onClick={() => handleTabClick("downstream")}
         >
-          Downstream Layers
+          Later Layers
         </button>
       </div>
       <div className="flex flex-col space-y-2 rounded mb-2">
@@ -69,11 +97,15 @@ export default function CorrNeuronsInsets({
           renderNeurons(corrNeuronsWithActivations.upstreamCorrNeurons)}
         {activeTab === "downstream" &&
           renderNeurons(corrNeuronsWithActivations.downstreamCorrNeurons)}
+        {activeTab === "sameLayer" &&
+          renderNeurons(corrNeuronsWithActivations.sameLayerCorrNeurons)}
       </div>
       {hasMultipleNeurons(
         activeTab === "upstream"
           ? corrNeuronsWithActivations.upstreamCorrNeurons
-          : corrNeuronsWithActivations.downstreamCorrNeurons
+          : activeTab === "downstream"
+          ? corrNeuronsWithActivations.downstreamCorrNeurons
+          : corrNeuronsWithActivations.sameLayerCorrNeurons
       ) && (
         <div className="flex justify-center mt-4">
           <button

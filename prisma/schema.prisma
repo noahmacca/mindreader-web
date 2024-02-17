@@ -34,11 +34,17 @@ model NeuronImageActivation {
 }
 
 model NeuronCorrelation {
-  id                                             Int     @id @default(autoincrement())
-  startNeuronId                                  String  @db.VarChar
-  endNeuronId                                    String  @db.VarChar
+  id                                             Int                 @id @default(autoincrement())
+  startNeuronId                                  String              @db.VarChar
+  endNeuronId                                    String              @db.VarChar
   corr                                           Float
-  isUpstream                                     Boolean
-  Neuron_NeuronCorrelation_endNeuronIdToNeuron   Neuron  @relation("NeuronCorrelation_endNeuronIdToNeuron", fields: [endNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Neuron_NeuronCorrelation_startNeuronIdToNeuron Neuron  @relation("NeuronCorrelation_startNeuronIdToNeuron", fields: [startNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  layerLocation                                  layer_location_enum
+  Neuron_NeuronCorrelation_endNeuronIdToNeuron   Neuron              @relation("NeuronCorrelation_endNeuronIdToNeuron", fields: [endNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Neuron_NeuronCorrelation_startNeuronIdToNeuron Neuron              @relation("NeuronCorrelation_startNeuronIdToNeuron", fields: [startNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum layer_location_enum {
+  LOWER
+  SAME
+  HIGHER
 }
