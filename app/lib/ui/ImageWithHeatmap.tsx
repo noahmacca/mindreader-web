@@ -20,7 +20,7 @@ export default function ImageWithHeatmap({
         height={500}
       />
       <div
-        className={`opacity-45 ${
+        className={`opacity-55 ${
           !noHover && "hover:opacity-0"
         } transition-opacity duration-150`}
       >

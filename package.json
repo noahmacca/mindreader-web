@@ -12,7 +12,10 @@
     "seed-sample": "node -r dotenv/config ./scripts/seed-sample.mjs"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.1.1",
+    "@mui/material": "^5.15.10",
     "@prisma/client": "^5.8.1",
     "@vercel/analytics": "^1.1.2",
     "@vercel/blob": "^0.20.0",

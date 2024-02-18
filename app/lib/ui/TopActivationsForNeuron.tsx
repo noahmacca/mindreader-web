@@ -50,19 +50,19 @@ export default async function TopActivationsForNeuron({
   const activationLevels = Object.values(sortedData);
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 lg:gap-4">
       {activationLevels.map((activationLevel) => (
         <div key={`key-${activationLevel.activation_level}`}>
-          <div className="text-md text-gray-500 mt-8 mb-0">
+          <div className="text-md text-gray-500 mb-0">
             Neuron Activation Level
           </div>
           <div className="text-xl font-semibold mb-2">
             {activationLevel.activation_level}
           </div>
-          <div className="flex flex-row flex-wrap gap-2 ml-2 lg:ml-4">
+          <div className="flex flex-row flex-wrap gap-2">
             {activationLevel.data.map((activation, index) => (
               <Link href={`/image/${activation.Image.id}`} key={index}>
-                <div className="w-36 lg:w-48 rounded">
+                <div className="w-32 lg:w-40 rounded">
                   <ImageWithHeatmap
                     imageId={activation.Image.id}
                     neuronId={activation.Neuron.id}
