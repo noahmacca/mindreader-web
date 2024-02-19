@@ -9,7 +9,7 @@ export default async function TopNeuronsListCards({
   layerId?: string;
   countNeuronsPerLayer: number;
 }) {
-  const layersPresent = (await getNeuronLayers()).sort();
+  const layersPresent = (await getNeuronLayers()).sort().reverse();
   const isValidLayerIdPresent = layerId && layersPresent.includes(layerId);
   let topNeuronsForAllLayers;
   if (!layerId) {
