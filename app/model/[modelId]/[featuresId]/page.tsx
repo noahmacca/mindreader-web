@@ -24,7 +24,7 @@ export default async function Page({
           </div>
         </div>
         <div className="mt-4 w-full text-gray-700">
-          The visualization below describes the information contined in each
+          The visualization below describes the information contained in each
           neuron in the network.
         </div>
       </div>
@@ -61,63 +61,59 @@ export default async function Page({
         </div>
       </div>
       <div className="flex flex-col space-y-4 mt-12">
-        <div className="p-6 bg-white border rounded-lg">
-          <div className="text-xl flex flex-row">
-            <div>
-              L:5 N:223 <b>Large leaves and grasses</b>
-            </div>
-          </div>
-          <div className="w-full border-t border-gray-300 my-2" />
-          <div className="flex flex-row space-x-6">
-            <div className="flex flex-col space-y-4">
+        {data.features.map((feature, index) => (
+          <div key={index} className="p-6 bg-white border rounded-lg">
+            <div className="text-xl flex flex-row">
               <div>
-                <div className="font-bold">Autointerp</div>
+                {feature.featureIdx} <b>{feature.humanInterp}</b>
+              </div>
+            </div>
+            <div className="w-full border-t border-gray-300 my-2" />
+            <div className="flex flex-row space-x-6">
+              <div className="flex flex-col space-y-4">
                 <div>
-                  Green leaves and grasses, primarily in forest environments.
+                  <div className="font-bold">Autointerp</div>
+                  <div>{feature.autoInterp}</div>
+                </div>
+                <div>
+                  <div className="font-bold">Correlated Upstream Features</div>
+                  {feature.corrsUpstream.map((corr, idx) => (
+                    <div key={idx} className="font-light">
+                      <u>{corr.featureIdx}</u> {corr.humanInterp} (Corr:{" "}
+                      {corr.corr})
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="font-bold">
+                    Correlated Downstream Features
+                  </div>
+                  {feature.corrsDownstream.map((corr, idx) => (
+                    <div key={idx} className="font-light">
+                      <u>{corr.featureIdx}</u> {corr.humanInterp} (Corr:{" "}
+                      {corr.corr})
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="font-bold">Activations</div>
+                  <div>Values: [{feature.activations.join(", ")}]</div>
                 </div>
               </div>
               <div>
-                <div className="font-bold">Correlated Upstream Features</div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
+                <div className="font-bold mb-2">Most Activating Images</div>
+                <div className="grid grid-cols-5 grid-rows-4 gap-2">
+                  {feature.images.map((image, imgIdx) => (
+                    <div
+                      key={imgIdx}
+                      className="bg-gray-300 h-24 w-24 hover:bg-gray-400 hover:cursor-pointer"
+                    ></div>
+                  ))}
                 </div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
-                </div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
-                </div>
-              </div>
-              <div>
-                <div className="font-bold">Correlated Upstream Features</div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
-                </div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
-                </div>
-                <div className="font-light">
-                  <u>L:4 N:221</u> Green colors (Corr: 0.95)
-                </div>
-              </div>
-              <div>
-                <div className="font-bold">Activations</div>
-                <div>[histogram TODO]</div>
-              </div>
-            </div>
-            <div>
-              <div className="font-bold mb-2">Most Activating Images</div>
-              <div className="grid grid-cols-5 grid-rows-4 gap-2">
-                {Array.from({ length: 20 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-300 h-24 w-24 hover:bg-gray-400 hover:cursor-pointer"
-                  ></div>
-                ))}
               </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
 
       <Footer />
