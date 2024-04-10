@@ -9,15 +9,23 @@ import {
 export const getSampleNeuronData = () => {
   const res = {
     modelId: "tinyClip",
-    featureType: "Neurons",
-    nodeCount: 5000,
+    featureType: "SAE",
+    nodeCount: 1024,
     features: [
       {
-        featureIdx: "L:5 N:223",
-        humanInterp: "Large leaves and grasses",
-        autoInterp: "Green leaves and grasses, primarily in forests",
-        activations: [50, 55, 60, 55, 40, 20, 10, 5, 5, 20, 35, 6, 2, 1],
-        maxActivation: 5.3,
+        feature: {
+          id: 0,
+          modelId: "tinyClip",
+          type: "neuron",
+          layerIdx: 1,
+          layerType: "FC1",
+          featureIdx: 512,
+          humanInterp: "Large leaves and grasses",
+          autoInterp:
+            "Forests, leaves, flowers, and branches are all apprent in these images.",
+          activationHist: [50, 55, 60, 55, 40, 20, 10, 5, 5, 20, 35, 6, 2, 1],
+          maxActivation: 0.948,
+        },
         corrsUpstream: [
           {
             featureIdx: "L:4 N:221",
