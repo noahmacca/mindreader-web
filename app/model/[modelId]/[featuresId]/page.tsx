@@ -1,14 +1,15 @@
 import Link from "next/link";
+import React from "react";
 
 import { getSampleNeuronData } from "@/localData/utils";
 import Footer from "@/app/lib/ui/Footer";
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
-export default async function Page({
-  params,
-}: {
+import HistogramChart from "@/app/lib/ui/HistogramChart";
+
+const Page: React.FC<{
   params: { modelId: string; featuresId: string };
-}) {
+}> = async ({ params }) => {
   const data = getSampleNeuronData();
   return (
     <main className="flex min-h-screen flex-col p-4 md:p-24 bg-stone-100">
@@ -72,7 +73,7 @@ export default async function Page({
             </div>
             <div className="w-full border-t border-gray-300 my-2" />
             <div className="flex flex-row space-x-6">
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-4 max-w-md">
                 <div>
                   <div className="font-bold">Autointerp</div>
                   <div className="font-light">{f.feature.autoInterp}</div>
@@ -98,25 +99,26 @@ export default async function Page({
                   ))}
                 </div>
                 <div>
-                  <div className="font-bold">Activations</div>
-                  <div className="font-light">
-                    Values: [{f.feature.activationHist.join(", ")}]
+                  <div className="font-bold mb-4">Activations</div>
+                  <div className="h-48 -ml-4 pr-4">
+                    <HistogramChart
+                      data={f.feature.activationHist.map((val, idx) => ({
+                        bin: idx * 0.25,
+                        count: val,
+                      }))}
+                    />
                   </div>
                 </div>
               </div>
               <div>
                 <div className="font-bold mb-2">Most Activating Images</div>
-                <div className="grid grid-cols-5 grid-rows-2 gap-2">
+                <div className="grid grid-cols-4 grid-rows-2 gap-2">
                   {f.images.map((image, imgIdx) => (
                     <div
                       key={imgIdx}
                       className="bg-gray-300 h-40 w-40 hover:bg-gray-400"
                     >
-                      <ImageWithHeatmap
-                        imageId={448}
-                        neuronId="9_FC1_828"
-                        noHover
-                      />
+                      <ImageWithHeatmap imageId={448} neuronId="9_FC1_828" />
                     </div>
                   ))}
                 </div>
@@ -129,7 +131,6 @@ export default async function Page({
       <Footer />
     </main>
   );
-}
-// src="https://mindreader-web.s3.amazonaws.com/neuron-image-activation/neuron-9_FC1_828-image-78.jpg"
-// src =
-//   "https://mindreader-web.s3.amazonaws.com/neuron-image-activation/neuron-9_FC1_828-image-448.jpg";
+};
+
+export default Page;

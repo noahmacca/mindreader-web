@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "./lib/ui/Footer";
 
 export default async function Home() {
