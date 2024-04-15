@@ -16,6 +16,12 @@ const config: Config = {
       screens: {
         betterhover: { raw: "(hover: hover)" },
       },
+      gridTemplateColumns: {
+        "14": "repeat(14, minmax(0, 1fr))",
+      },
+      gridTemplateRows: {
+        "14": "repeat(14, minmax(0, 1fr))",
+      },
     },
   },
   plugins: [],

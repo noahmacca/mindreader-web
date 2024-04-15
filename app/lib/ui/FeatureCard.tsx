@@ -21,8 +21,6 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
     null
   );
 
-  //   console.log('FeatureCard', featurefeatureImageActivationPatches)
-
   return (
     <div className="p-6 bg-white border rounded-lg">
       <div className="text-xl flex flex-row">
@@ -80,23 +78,28 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <div>
           <div className="font-bold mb-2">Most Activating Images</div>
           <div className="grid grid-cols-3 grid-rows-2 gap-2">
-            {[...Array(9)].map((_, imgIdx) => (
-              <div
-                key={imgIdx}
-                className="bg-gray-300 h-36 w-36 hover:bg-gray-400 relative"
-              >
-                {/* <ImageWithHeatmap imageId={448} neuronId="9_FC1_828" noHover /> */}
-                <div className="bg-green-500 h-36 w-36"></div>
-                <div className="absolute inset-0">
-                  <HoverGrid
-                    infoStrings={tooltipInfoObjects}
-                    onSquareHover={(squareIdx) => {
-                      setSelectedActivation(squareIdx);
-                    }}
-                  />
+            {feature.highestActivatingImages
+              .slice(0, 9)
+              .map((imageId, imgIdx) => (
+                <div
+                  key={imgIdx}
+                  className="bg-gray-300 h-36 w-36 hover:bg-gray-400 relative"
+                >
+                  <div className="bg-green-500 h-36 w-36"></div>
+                  <div className="absolute inset-0">
+                    <HoverGrid
+                      infoStrings={feature.images[imageId].map((patch) => ({
+                        label: patch.label ?? "No label",
+                        activation: patch.activationValue,
+                        zScore: patch.activationZScore,
+                      }))}
+                      onSquareHover={(squareIdx) => {
+                        setSelectedActivation(squareIdx);
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

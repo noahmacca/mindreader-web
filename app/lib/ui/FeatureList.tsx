@@ -8,8 +8,8 @@ import { getSampleFeatureData } from "@/localData/utils";
 const FeatureList = async () => {
   //   const data = getSampleNeuronData();
   const features = await getFeaturesForLayer(6);
-  console.log("fetching faetureData");
-  console.log(features);
+  console.log("fetching featureData");
+  // console.log(Object.keys(features[0]));
 
   return (
     <div className="flex flex-col space-y-4 mt-12">

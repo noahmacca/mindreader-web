@@ -36,7 +36,7 @@ const HoverGrid: React.FC<HoverGridProps> = ({
 
   return (
     <div
-      className={`grid grid-cols-${gridSize} grid-rows-${gridSize}`}
+      className={`grid grid-cols-14 grid-rows-14`}
       style={{ height: "100%" }}
     >
       {paddedSquares.map((square, index) => (
@@ -55,9 +55,9 @@ const HoverGrid: React.FC<HoverGridProps> = ({
               <div>
                 label: <b>{square.info.label}</b>
                 <br />
-                activation: <b>{square.info.activation}</b>
+                activation: <b>{square.info.activation.toFixed(2)}</b>
                 <br />
-                zScore: <b>{square.info.zScore}</b>
+                zScore: <b>{square.info.zScore.toFixed(2)}</b>
               </div>
             </div>
           )}
