@@ -1,50 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
 }
 
-model Image {
-  id                    Int                     @id @default(autoincrement())
-  label                 String                  @db.VarChar
-  predicted             String                  @db.VarChar
-  NeuronImageActivation NeuronImageActivation[]
+model Feature {
+  id                            String                        @id
+  modelName                     ModelName
+  featureType                   FeatureType
+  layerType                     LayerType
+  layerIdx                      Int
+  featureIdx                    Int
+  humanInterp                   String?
+  autoInterp                    String?
+  activationHistVals            Json[]
+  maxActivation                 Float
+  featureImageActivationPatches FeatureImageActivationPatch[]
+  startFeatureCorrelations      FeatureCorrelation[]          @relation("startFeature")
+  endFeatureCorrelations        FeatureCorrelation[]          @relation("endFeature")
+
+  @@unique([modelName, featureType, layerIdx, layerType, featureIdx])
 }
 
-model Neuron {
-  id                                                        String                  @id @db.VarChar
-  topClasses                                                String                  @db.VarChar
-  maxActivation                                             Float
-  NeuronCorrelation_NeuronCorrelation_endNeuronIdToNeuron   NeuronCorrelation[]     @relation("NeuronCorrelation_endNeuronIdToNeuron")
-  NeuronCorrelation_NeuronCorrelation_startNeuronIdToNeuron NeuronCorrelation[]     @relation("NeuronCorrelation_startNeuronIdToNeuron")
-  NeuronImageActivation                                     NeuronImageActivation[]
+model FeatureImageActivationPatch {
+  id               Int     @id @default(autoincrement())
+  imageId          Int
+  featureId        String
+  feature          Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  patchIdx         Int
+  activationZScore Float
+  activationValue  Float
+  label            String?
+
+  @@unique([imageId, featureId, patchIdx])
 }
 
-model NeuronImageActivation {
-  id            Int    @id @default(autoincrement())
-  neuronId      String @db.VarChar
-  imageId       Int
-  maxActivation Float
-  Image         Image  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Neuron        Neuron @relation(fields: [neuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model FeatureCorrelation {
+  id             Int        @id @default(autoincrement())
+  startFeatureId String
+  startFeature   Feature    @relation(name: "startFeature", fields: [startFeatureId], references: [id], onDelete: Cascade)
+  endFeatureId   String
+  endFeature     Feature    @relation(name: "endFeature", fields: [endFeatureId], references: [id], onDelete: Cascade)
+  corr           Float
+  endFeatureLoc  FeatureLoc
+
+  @@unique([startFeatureId, endFeatureId])
 }
 
-model NeuronCorrelation {
-  id                                             Int                 @id @default(autoincrement())
-  startNeuronId                                  String              @db.VarChar
-  endNeuronId                                    String              @db.VarChar
-  corr                                           Float
-  layerLocation                                  layer_location_enum
-  Neuron_NeuronCorrelation_endNeuronIdToNeuron   Neuron              @relation("NeuronCorrelation_endNeuronIdToNeuron", fields: [endNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Neuron_NeuronCorrelation_startNeuronIdToNeuron Neuron              @relation("NeuronCorrelation_startNeuronIdToNeuron", fields: [startNeuronId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+enum FeatureLoc {
+  UPSTREAM
+  SAME_LAYER
+  DOWNSTREAM
 }
 
-enum layer_location_enum {
-  LOWER
-  SAME
-  HIGHER
+enum ModelName {
+  CLIP_TINY
+  CLIP_NORMAL
+  VIT_NORMAL
+  VIT_LARGE
+}
+
+enum FeatureType {
+  NEURON
+  SAE_1024
+}
+
+enum LayerType {
+  ATT1
+  FC1
+  FC2
 }
