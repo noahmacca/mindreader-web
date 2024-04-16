@@ -35,7 +35,7 @@ export async function getFeaturesForLayer(
       orderBy: {
         maxActivation: "desc",
       },
-      take: 3,
+      take: 5,
     });
 
     // Validate json field in activationHistVals and add typing

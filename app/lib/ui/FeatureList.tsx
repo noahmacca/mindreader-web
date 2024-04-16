@@ -6,10 +6,8 @@ import { getFeaturesForLayer } from "@/app/lib/data";
 import { getSampleFeatureData } from "@/localData/utils";
 
 const FeatureList = async () => {
-  //   const data = getSampleNeuronData();
-  const features = await getFeaturesForLayer(6);
+  const features = await getFeaturesForLayer(7);
   console.log("fetching featureData");
-  // console.log(Object.keys(features[0]));
 
   return (
     <div className="flex flex-col space-y-4 mt-12">

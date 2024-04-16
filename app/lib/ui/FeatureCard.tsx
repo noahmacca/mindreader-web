@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { Feature } from "@/app/lib/data";
 
+import Image from "next/image";
+
 import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
 import HistogramChart from "@/app/lib/ui/HistogramChart";
@@ -77,21 +79,29 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         </div>
         <div>
           <div className="font-bold mb-2">Most Activating Images</div>
-          <div className="grid grid-cols-3 grid-rows-2 gap-2">
+          <div className="grid grid-cols-5 grid-rows-4 gap-4 relative">
             {feature.highestActivatingImages
-              .slice(0, 9)
+              .slice(0, 15)
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}
-                  className="bg-gray-300 h-36 w-36 hover:bg-gray-400 relative"
+                  className="bg-gray-300 h-48 w-48 hover:bg-gray-400 relative z-0"
                 >
-                  <div className="bg-green-500 h-36 w-36"></div>
+                  <Image
+                    unoptimized
+                    src={`https://mindreader-web.s3.amazonaws.com/image_v2/${imageId}.jpg`}
+                    alt="Mindreader Visualization"
+                    className="block w-full rounded"
+                    width={600}
+                    height={600}
+                  />
                   <div className="absolute inset-0">
                     <HoverGrid
                       infoStrings={feature.images[imageId].map((patch) => ({
                         label: patch.label ?? "No label",
                         activation: patch.activationValue,
                         zScore: patch.activationZScore,
+                        patchIdx: patch.patchIdx,
                       }))}
                       onSquareHover={(squareIdx) => {
                         setSelectedActivation(squareIdx);
