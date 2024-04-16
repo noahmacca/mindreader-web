@@ -40,7 +40,7 @@ const HistogramChart: React.FC<HistogramChartProps> = ({
             position: "bottom",
             offset: 0,
           }}
-          // tickFormatter={(tick = 0) => tick.toFixed(2)}
+          tickFormatter={(tick = 0) => tick.toFixed(2)}
         />
         <YAxis allowDataOverflow />
         {/* <Tooltip /> */}

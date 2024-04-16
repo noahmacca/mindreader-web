@@ -81,11 +81,6 @@ export async function getFeaturesForLayer(
       };
     });
 
-    console.log(
-      "featuresWithImages",
-      featuresWithImages[0].highestActivatingImages
-    );
-
     if (features.length === 0) {
       throw new Error(`No features found for layer index ${layerIdx}`);
     }
