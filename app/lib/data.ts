@@ -20,7 +20,7 @@ function isValidActivationHistVal(obj: any): obj is ActivationHistVal {
 export async function getFeaturesForLayer(
   selectedLayers: string,
   selectedSort: string
-): Promise<Feature[]> {
+): Promise<PrismaFeature[]> {
   try {
     // Use params to select layer
     let whereClause = {};
@@ -58,75 +58,17 @@ export async function getFeaturesForLayer(
         );
     }
 
-    const startTime = Date.now();
-    const rawFeatures = await prisma.feature.findMany({
+    const features = await prisma.feature.findMany({
       where: whereClause,
-      include: {
-        featureImageActivationPatches: {
-          orderBy: {
-            patchIdx: "asc",
-          },
-        },
-      },
       orderBy: orderByClause,
       skip: skip,
       take: 5,
     });
-    const dbQueryTime = Date.now() - startTime;
-    console.log(`Database query time: ${dbQueryTime}ms`);
-
-    const processingStartTime = Date.now();
-    // Validate json field in activationHistVals and add typing
-    const features = rawFeatures.map((feature) => ({
-      ...feature,
-      activationHistVals: Array.isArray(feature.activationHistVals)
-        ? feature.activationHistVals.map((val) => {
-            if (isValidActivationHistVal(val)) {
-              return val as ActivationHistVal;
-            } else {
-              throw new Error("Invalid activationHistVal data");
-            }
-          })
-        : [],
-    }));
-
-    const featuresWithImages = features.map((feature) => {
-      const patchesByImageId = feature.featureImageActivationPatches.reduce<
-        Record<number, FeatureImageActivationPatch[]>
-      >((acc, patch) => {
-        if (!acc[patch.imageId]) {
-          acc[patch.imageId] = [];
-        }
-        acc[patch.imageId].push(patch);
-        return acc;
-      }, {});
-
-      // Create a list of imageIds sorted by the max activationZScore of any patch
-      const highestActivatingImages = Object.entries(patchesByImageId)
-        .map(([imageId, patches]) => ({
-          imageId: parseInt(imageId),
-          maxActivationZScore: Math.max(
-            ...patches.map((patch) => patch.activationZScore)
-          ),
-        }))
-        .sort((a, b) => b.maxActivationZScore - a.maxActivationZScore)
-        .map((entry) => entry.imageId);
-
-      const { featureImageActivationPatches, ...featureWithoutPatches } =
-        feature;
-      return {
-        ...featureWithoutPatches,
-        images: patchesByImageId,
-        highestActivatingImages: highestActivatingImages,
-      };
-    });
-    const processingTime = Date.now() - processingStartTime;
-    console.log(`Data processing time: ${processingTime}ms`);
 
     if (features.length === 0) {
       throw new Error(`No features found for layer index ${selectedLayers}`);
     }
-    return featuresWithImages;
+    return features;
   } catch (error) {
     console.error(
       `Failed to fetch features from layer ${selectedLayers}:`,

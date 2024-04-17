@@ -13,7 +13,7 @@ const FeatureList: React.FC<{
     <div className="flex flex-col space-y-4 mt-8">
       {features.map((feature, index) => (
         <div key={index}>
-          <FeatureCard feature={feature} />
+          <FeatureCard featureId={feature.id} />
         </div>
       ))}
     </div>

@@ -2,28 +2,39 @@
 
 import { useState, useEffect } from "react";
 
-import { Feature } from "@/app/lib/data";
-import { create } from "@/app/actions";
+import { getFeatureById, Feature } from "@/app/actions";
+import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
 
 import Image from "next/image";
-
-import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 
 import HistogramChart from "@/app/lib/ui/HistogramChart";
 import HoverGrid from "@/app/lib/ui/HoverGrid";
 
-const FeatureCard = ({ feature }: { feature: Feature }) => {
+const FeatureCard = ({ featureId }: { featureId: string }) => {
   const [selectedActivation, setSelectedActivation] = useState<number | null>(
     null
   );
 
+  const [feature, setFeature] = useState<Feature | null>(null);
+
   useEffect(() => {
-    async function performCreate() {
-      const response = await create();
+    async function getFeatureData() {
+      const response = await getFeatureById(featureId);
       console.log("Response from create:", response);
+      setFeature(response);
     }
-    performCreate();
-  }, []);
+    getFeatureData();
+  }, [featureId]);
+
+  if (!feature) {
+    return (
+      <div className="p-6 bg-white border rounded-lg w-full h-1/4">
+        <div className="text-xl h-1/4">Loading Feature {featureId}</div>
+        <div className="w-full border-t border-gray-300 my-4" />
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-white border rounded-lg w-full">
@@ -88,6 +99,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
                         patchIdx: patch.patchIdx,
                       }))}
                       onSquareHover={(squareIdx) => {
+                        console.log("onSquareHover", squareIdx);
                         setSelectedActivation(squareIdx);
                       }}
                     />
