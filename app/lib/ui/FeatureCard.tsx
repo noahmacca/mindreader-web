@@ -11,14 +11,7 @@ import ImageWithHeatmap from "@/app/lib/ui/ImageWithHeatmap";
 import HistogramChart from "@/app/lib/ui/HistogramChart";
 import HoverGrid from "@/app/lib/ui/HoverGrid";
 
-import {
-  getSampleFeatureData,
-  getSampleTooltipInfoObjects,
-} from "@/localData/utils";
-
 const FeatureCard = ({ feature }: { feature: Feature }) => {
-  const sampleData = getSampleFeatureData();
-  const tooltipInfoObjects = getSampleTooltipInfoObjects();
   const [selectedActivation, setSelectedActivation] = useState<number | null>(
     null
   );
@@ -44,29 +37,11 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
           </div>
           <div>
             <div className="font-bold">Correlated Upstream Features</div>
-            {sampleData.features[0].corrsUpstream.map(
-              (corr: any, idx: number) => (
-                <div key={idx} className="font-light">
-                  <u>{corr.featureIdx}</u> {corr.humanInterp} (Corr: {corr.corr}
-                  )
-                </div>
-              )
-            )}
-          </div>
-          <div>
-            <div className="font-bold">Correlated Upstream Features</div>
-            {sampleData.features[0].corrsDownstream.map(
-              (corr: any, idx: number) => (
-                <div key={idx} className="font-light">
-                  <u>{corr.featureIdx}</u> {corr.humanInterp} (Corr: {corr.corr}
-                  )
-                </div>
-              )
-            )}
+            <div>TODO</div>
           </div>
           <div>
             <div className="font-bold mb-4">Activations</div>
-            <div className="h-36 -ml-4 pr-4">
+            <div className="h-48 -ml-4 pr-4">
               <HistogramChart
                 data={feature.activationHistVals.map((val, idx) => ({
                   bin: val.x,
@@ -81,7 +56,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
           <div className="font-bold mb-2">Most Activating Images</div>
           <div className="flex flex-wrap gap-4 relative">
             {feature.highestActivatingImages
-              .slice(0, 15)
+              .slice(0, 16)
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}

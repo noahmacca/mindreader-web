@@ -58,6 +58,7 @@ export async function getFeaturesForLayer(
         );
     }
 
+    const startTime = Date.now();
     const rawFeatures = await prisma.feature.findMany({
       where: whereClause,
       include: {
@@ -69,9 +70,12 @@ export async function getFeaturesForLayer(
       },
       orderBy: orderByClause,
       skip: skip,
-      take: 5,
+      take: 4,
     });
+    const dbQueryTime = Date.now() - startTime;
+    console.log(`Database query time: ${dbQueryTime}ms`);
 
+    const processingStartTime = Date.now();
     // Validate json field in activationHistVals and add typing
     const features = rawFeatures.map((feature) => ({
       ...feature,
@@ -108,12 +112,16 @@ export async function getFeaturesForLayer(
         .sort((a, b) => b.maxActivationZScore - a.maxActivationZScore)
         .map((entry) => entry.imageId);
 
+      const { featureImageActivationPatches, ...featureWithoutPatches } =
+        feature;
       return {
-        ...feature,
+        ...featureWithoutPatches,
         images: patchesByImageId,
         highestActivatingImages: highestActivatingImages,
       };
     });
+    const processingTime = Date.now() - processingStartTime;
+    console.log(`Data processing time: ${processingTime}ms`);
 
     if (features.length === 0) {
       throw new Error(`No features found for layer index ${selectedLayers}`);

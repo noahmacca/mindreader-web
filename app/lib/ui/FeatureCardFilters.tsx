@@ -13,7 +13,7 @@ export default function FeatureCardFilters() {
   const handleSelectChange = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
     params.set(key, value);
-    replace(`${pathname}?${params.toString()}`);
+    window.location.href = `${pathname}?${params.toString()}`;
   };
 
   return (
