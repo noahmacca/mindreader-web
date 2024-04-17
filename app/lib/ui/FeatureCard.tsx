@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Feature } from "@/app/lib/data";
+import { create } from "@/app/actions";
 
 import Image from "next/image";
 
@@ -15,6 +16,14 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
   const [selectedActivation, setSelectedActivation] = useState<number | null>(
     null
   );
+
+  useEffect(() => {
+    async function performCreate() {
+      const response = await create();
+      console.log("Response from create:", response);
+    }
+    performCreate();
+  }, []);
 
   return (
     <div className="p-6 bg-white border rounded-lg w-full">
