@@ -8,7 +8,7 @@ type ActivationHistVal = { x: number; y: number };
 
 export interface Feature extends PrismaFeature {
   activationHistVals: ActivationHistVal[];
-  featureImageActivationPatches: FeatureImageActivationPatch[];
+  // featureImageActivationPatches: FeatureImageActivationPatch[];
   images: Record<number, FeatureImageActivationPatch[]>;
   highestActivatingImages: number[];
 }
@@ -70,7 +70,7 @@ export async function getFeaturesForLayer(
       },
       orderBy: orderByClause,
       skip: skip,
-      take: 4,
+      take: 5,
     });
     const dbQueryTime = Date.now() - startTime;
     console.log(`Database query time: ${dbQueryTime}ms`);

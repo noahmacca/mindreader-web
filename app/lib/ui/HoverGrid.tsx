@@ -35,23 +35,25 @@ const HoverGrid: React.FC<HoverGridProps> = ({
     onSquareHover && onSquareHover(null);
   };
 
-  const getColorForZScore = (
-    zScore: number,
-    minZ: number = 0,
-    maxZ: number = 4
+  const getColorForActivation = (
+    activation: number,
+    minA: number = 0,
+    maxA: number = 4
   ) => {
     const index = Math.min(
       plasmaCmap.length - 1,
       Math.max(
         0,
-        Math.round(((zScore - minZ) / (maxZ - minZ)) * (plasmaCmap.length - 1))
+        Math.round(
+          ((activation - minA) / (maxA - minA)) * (plasmaCmap.length - 1)
+        )
       )
     );
     const [r, g, b] = plasmaCmap[index];
     return `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
   };
 
-  const maxZScore = Math.max(...squares.map((s) => s.info.zScore));
+  const maxActivation = Math.max(...squares.map((s) => s.info.activation));
 
   return (
     <div
@@ -61,20 +63,25 @@ const HoverGrid: React.FC<HoverGridProps> = ({
       {squares.map((square, index) => (
         <div
           key={index}
-          className="relative hover:cursor-pointer z-0"
-          style={{
-            backgroundColor: `${getColorForZScore(
-              square.info.zScore,
-              maxZScore
-            )}`,
-            opacity: hoveredSquare === square.id ? 0.6 : 0.3,
-          }}
+          className="relative hover:cursor-pointer"
           onMouseEnter={() => handleMouseEnter(square.id)}
           onMouseLeave={handleMouseLeave}
         >
+          <div
+            style={{
+              backgroundColor: `${getColorForActivation(
+                square.info.activation,
+                0,
+                maxActivation
+              )}`,
+              opacity: hoveredSquare === square.id ? 0.7 : 0.35,
+              height: "100%",
+              width: "100%",
+            }}
+          />
           {hoveredSquare === square.id && (
             <div
-              className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white px-2 py-1 rounded text-xs whitespace-nowrap z-100 pointer-events-none bg-opacity-100"
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white px-2 py-1 rounded text-xs whitespace-nowrap z-50 pointer-events-none bg-opacity-90"
               style={{
                 opacity: 1.0,
               }}
@@ -85,8 +92,6 @@ const HoverGrid: React.FC<HoverGridProps> = ({
                 activation: <b>{square.info.activation.toFixed(2)}</b>
                 <br />
                 zScore: <b>{square.info.zScore.toFixed(2)}</b>
-                <br />
-                patchIdx: <b>{square.info.patchIdx}</b>
               </div>
             </div>
           )}

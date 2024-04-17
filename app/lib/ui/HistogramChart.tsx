@@ -10,7 +10,11 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  Cell,
+  LabelList,
 } from "recharts";
+
+import { plasmaCmap } from "@/app/lib/constants";
 
 interface HistogramData {
   bin: number;
@@ -26,6 +30,21 @@ const HistogramChart: React.FC<HistogramChartProps> = ({
   data,
   refLineXVal,
 }) => {
+  // Function to determine color based on index value using plasmaCmap
+  const getColor = (index: number, total: number) => {
+    const cmapIndex = Math.floor((plasmaCmap.length - 1) * (index / total));
+    const [r, g, b] = plasmaCmap[cmapIndex];
+    return `rgba(${r * 255}, ${g * 255}, ${b * 255}, 1)`;
+  };
+
+  const cappedRefLineXVal =
+    refLineXVal &&
+    (refLineXVal <= 0
+      ? data[0].bin
+      : refLineXVal > data[data.length - 1].bin
+      ? data[data.length - 1].bin
+      : refLineXVal);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data} margin={{ bottom: 30 }}>
@@ -43,9 +62,17 @@ const HistogramChart: React.FC<HistogramChartProps> = ({
           tickFormatter={(tick = 0) => tick.toFixed(2)}
         />
         <YAxis allowDataOverflow />
-        {/* <Tooltip /> */}
-        <Bar dataKey="count" fill="#8884d8" />
-        {refLineXVal !== null && <ReferenceLine x={refLineXVal} stroke="red" />}
+        <Tooltip />
+        <Bar dataKey="count">
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={getColor(index, data.length)} />
+          ))}
+          {/* <LabelList dataKey="count" position="insideTop" fill="#f5f5f5" />
+          <LabelList dataKey="bin" position="insideBottom" fill="#f5f5f5" /> */}
+        </Bar>
+        {cappedRefLineXVal !== null && (
+          <ReferenceLine x={cappedRefLineXVal} stroke="red" strokeWidth={1.5} />
+        )}
       </BarChart>
     </ResponsiveContainer>
   );
