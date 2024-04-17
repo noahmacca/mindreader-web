@@ -18,13 +18,48 @@ function isValidActivationHistVal(obj: any): obj is ActivationHistVal {
 }
 
 export async function getFeaturesForLayer(
-  layerIdx: number
+  selectedLayers: string,
+  selectedSort: string
 ): Promise<Feature[]> {
   try {
+    // Use params to select layer
+    let whereClause = {};
+    if (selectedLayers !== "all") {
+      const layerIdx = parseInt(selectedLayers, 10);
+      if (isNaN(layerIdx)) {
+        throw new Error("selectedLayers must be 'all' or a valid integer");
+      }
+      whereClause = { layerIdx };
+    }
+
+    // Use params for sortBy
+    let orderByClause = {};
+    let skip = 0;
+    switch (selectedSort) {
+      case "max":
+        orderByClause = {
+          maxActivation: "desc",
+        };
+        break;
+      case "min":
+        orderByClause = {
+          maxActivation: "asc",
+        };
+        break;
+      case "random":
+        const featuresCount = await prisma.feature.count({
+          where: whereClause,
+        });
+        skip = Math.floor(Math.random() * featuresCount);
+        break;
+      default:
+        throw new Error(
+          "Invalid selectedSort value. Must be 'max', 'min', or 'random'."
+        );
+    }
+
     const rawFeatures = await prisma.feature.findMany({
-      where: {
-        layerIdx: layerIdx,
-      },
+      where: whereClause,
       include: {
         featureImageActivationPatches: {
           orderBy: {
@@ -32,9 +67,8 @@ export async function getFeaturesForLayer(
           },
         },
       },
-      orderBy: {
-        maxActivation: "desc",
-      },
+      orderBy: orderByClause,
+      skip: skip,
       take: 5,
     });
 
@@ -82,11 +116,14 @@ export async function getFeaturesForLayer(
     });
 
     if (features.length === 0) {
-      throw new Error(`No features found for layer index ${layerIdx}`);
+      throw new Error(`No features found for layer index ${selectedLayers}`);
     }
     return featuresWithImages;
   } catch (error) {
-    console.error(`Failed to fetch features from layer ${layerIdx}:`, error);
+    console.error(
+      `Failed to fetch features from layer ${selectedLayers}:`,
+      error
+    );
     return [];
   }
 }

@@ -31,7 +31,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
           <b>{feature.humanInterp}</b>
         </div>
       </div>
-      <div className="w-full border-t border-gray-300 my-2" />
+      <div className="w-full border-t border-gray-300 my-4" />
       <div className="flex flex-row space-x-10 w-full">
         <div className="flex flex-col space-y-4 w-1/4">
           <div>
@@ -66,7 +66,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
           </div>
           <div>
             <div className="font-bold mb-4">Activations</div>
-            <div className="h-48 -ml-4 pr-4">
+            <div className="h-36 -ml-4 pr-4">
               <HistogramChart
                 data={feature.activationHistVals.map((val, idx) => ({
                   bin: val.x,
@@ -85,7 +85,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}
-                  className="bg-gray-300 h-48 w-48 md:h-36 md:w-36 hover:bg-gray-400 relative z-0"
+                  className="h-48 w-48 md:h-36 md:w-36 relative z-0"
                 >
                   <Image
                     unoptimized

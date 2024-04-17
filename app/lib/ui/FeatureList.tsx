@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import FeatureCard from "@/app/lib/ui/FeatureCard";
 
 import { getFeaturesForLayer } from "@/app/lib/data";
 
-import { getSampleFeatureData } from "@/localData/utils";
-
-const FeatureList = async () => {
-  const features = await getFeaturesForLayer(7);
-  console.log("fetching featureData");
+const FeatureList: React.FC<{
+  selectedSort: string;
+  selectedLayers: string;
+}> = async ({ selectedSort, selectedLayers }) => {
+  const features = await getFeaturesForLayer(selectedLayers, selectedSort);
 
   return (
-    <div className="flex flex-col space-y-4 mt-12">
+    <div className="flex flex-col space-y-4 mt-8">
       {features.map((feature, index) => (
         <div key={index}>
           <FeatureCard feature={feature} />
