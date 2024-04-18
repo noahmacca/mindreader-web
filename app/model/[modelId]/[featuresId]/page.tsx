@@ -21,6 +21,7 @@ const Page: React.FC<{
   const selectedLayers = searchParams?.layers || "";
 
   const features = await getFeaturesForLayer(selectedLayers, selectedSort);
+  const featureIds: string[] = features.map((f) => f.id);
 
   const modelName = params.modelId
     .split("_")
@@ -51,9 +52,7 @@ const Page: React.FC<{
       <div className="w-full border-t border-gray-300 my-8"></div>
 
       <FeatureCardFilters />
-      <Suspense fallback={<LoadingSpinner />}>
-        <FeatureList features={features} />
-      </Suspense>
+      <FeatureList featureIds={featureIds} />
       <Footer />
     </main>
   );

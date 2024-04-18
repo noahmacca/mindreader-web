@@ -46,7 +46,7 @@ export async function getFeaturesForLayer(
       where: whereClause,
       orderBy: orderByClause,
       skip: skip,
-      take: 3,
+      take: 20,
     });
 
     if (features.length === 0) {

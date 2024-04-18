@@ -20,7 +20,6 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   useEffect(() => {
     async function getFeatureData() {
       const response = await getFeatureById(featureId);
-      console.log("Response from create:", response);
       setFeature(response);
     }
     getFeatureData();
@@ -31,7 +30,9 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
       <div className="p-6 bg-white border rounded-lg w-full h-1/4">
         <div className="text-xl h-1/4">Loading Feature {featureId}</div>
         <div className="w-full border-t border-gray-300 my-4" />
-        <LoadingSpinner />
+        <div className="my-48">
+          <LoadingSpinner />
+        </div>
       </div>
     );
   }
@@ -99,7 +100,6 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
                         patchIdx: patch.patchIdx,
                       }))}
                       onSquareHover={(squareIdx) => {
-                        console.log("onSquareHover", squareIdx);
                         setSelectedActivation(squareIdx);
                       }}
                     />
