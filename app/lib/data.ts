@@ -1,26 +1,10 @@
 import prisma from "../lib/prisma";
-import {
-  Feature as PrismaFeature,
-  FeatureImageActivationPatch,
-} from "@prisma/client";
-
-type ActivationHistVal = { x: number; y: number };
-
-export interface Feature extends PrismaFeature {
-  activationHistVals: ActivationHistVal[];
-  // featureImageActivationPatches: FeatureImageActivationPatch[];
-  images: Record<number, FeatureImageActivationPatch[]>;
-  highestActivatingImages: number[];
-}
-
-function isValidActivationHistVal(obj: any): obj is ActivationHistVal {
-  return obj && typeof obj.x === "number" && typeof obj.y === "number";
-}
+import { Feature } from "@prisma/client";
 
 export async function getFeaturesForLayer(
   selectedLayers: string,
   selectedSort: string
-): Promise<PrismaFeature[]> {
+): Promise<Feature[]> {
   try {
     // Use params to select layer
     let whereClause = {};
@@ -62,7 +46,7 @@ export async function getFeaturesForLayer(
       where: whereClause,
       orderBy: orderByClause,
       skip: skip,
-      take: 5,
+      take: 3,
     });
 
     if (features.length === 0) {

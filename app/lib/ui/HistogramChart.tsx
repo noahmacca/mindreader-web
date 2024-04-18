@@ -11,7 +11,6 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Cell,
-  LabelList,
 } from "recharts";
 
 import { plasmaCmap } from "@/app/lib/constants";
@@ -62,13 +61,11 @@ const HistogramChart: React.FC<HistogramChartProps> = ({
           tickFormatter={(tick = 0) => tick.toFixed(2)}
         />
         <YAxis allowDataOverflow />
-        <Tooltip />
+        {/* <Tooltip /> */}
         <Bar dataKey="count">
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={getColor(index, data.length)} />
           ))}
-          {/* <LabelList dataKey="count" position="insideTop" fill="#f5f5f5" />
-          <LabelList dataKey="bin" position="insideBottom" fill="#f5f5f5" /> */}
         </Bar>
         {cappedRefLineXVal !== null && (
           <ReferenceLine x={cappedRefLineXVal} stroke="red" strokeWidth={1.5} />
