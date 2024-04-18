@@ -8,6 +8,7 @@ import Footer from "@/app/lib/ui/Footer";
 import FeatureList from "@/app/lib/ui/FeatureList";
 import FeatureCardFilters from "@/app/lib/ui/FeatureCardFilters";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
+import { getFeaturesForLayer } from "@/app/lib/data";
 
 const Page: React.FC<{
   params: { modelId: string; featuresId: string };
@@ -15,9 +16,11 @@ const Page: React.FC<{
     sort?: string;
     layers?: string;
   };
-}> = ({ params, searchParams }) => {
+}> = async ({ params, searchParams }) => {
   const selectedSort = searchParams?.sort || "";
   const selectedLayers = searchParams?.layers || "";
+
+  const features = await getFeaturesForLayer(selectedLayers, selectedSort);
 
   const modelName = params.modelId
     .split("_")
@@ -49,10 +52,7 @@ const Page: React.FC<{
 
       <FeatureCardFilters />
       <Suspense fallback={<LoadingSpinner />}>
-        <FeatureList
-          selectedSort={selectedSort}
-          selectedLayers={selectedLayers}
-        />
+        <FeatureList features={features} />
       </Suspense>
       <Footer />
     </main>

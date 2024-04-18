@@ -1,14 +1,12 @@
+"use client";
+
 import React from "react";
 import FeatureCard from "@/app/lib/ui/FeatureCard";
-
-import { getFeaturesForLayer } from "@/app/lib/data";
+import { Feature } from "@prisma/client";
 
 const FeatureList: React.FC<{
-  selectedSort: string;
-  selectedLayers: string;
-}> = async ({ selectedSort, selectedLayers }) => {
-  const features = await getFeaturesForLayer(selectedLayers, selectedSort);
-
+  features: Feature[];
+}> = ({ features }) => {
   return (
     <div className="flex flex-col space-y-4 mt-8">
       {features.map((feature, index) => (
