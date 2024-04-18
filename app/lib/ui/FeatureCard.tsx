@@ -38,7 +38,10 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   }
 
   return (
-    <div className="p-6 bg-white border rounded-lg w-full">
+    <div
+      className="p-6 bg-white border rounded-lg w-full overflow-hidden"
+      style={{ height: "425px" }}
+    >
       <div className="text-xl flex flex-row">
         <div>
           {`L:${feature.layerIdx} (${feature.layerType}) N:${feature.featureIdx}`}{" "}
@@ -62,7 +65,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
           </div>
           <div>
             <div className="font-bold mb-4">Activations</div>
-            <div className="h-48 -ml-4 pr-4">
+            <div className="h-40 -ml-4 pr-4">
               <HistogramChart
                 data={feature.activationHistVals.map((val, idx) => ({
                   bin: val.x,
@@ -75,13 +78,13 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
         </div>
         <div className="w-3/4">
           <div className="font-bold mb-2">Most Activating Images</div>
-          <div className="flex flex-wrap gap-4 relative">
+          <div className="flex flex-wrap gap-2 relative">
             {feature.highestActivatingImages
               .slice(0, 16)
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}
-                  className="h-48 w-48 md:h-36 md:w-36 relative z-0"
+                  className="lg:h-32 lg:w-32 md:h-24 md:w-24 h-20 w-20 relative z-0"
                 >
                   <Image
                     unoptimized

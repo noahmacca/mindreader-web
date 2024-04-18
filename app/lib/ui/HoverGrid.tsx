@@ -63,7 +63,7 @@ const HoverGrid: React.FC<HoverGridProps> = ({
       {squares.map((square, index) => (
         <div
           key={index}
-          className="relative hover:cursor-pointer"
+          className="relative"
           onMouseEnter={() => handleMouseEnter(square.id)}
           onMouseLeave={handleMouseLeave}
         >
