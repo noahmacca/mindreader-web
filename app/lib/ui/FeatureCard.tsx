@@ -84,13 +84,13 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}
-                  className="lg:h-32 lg:w-32 md:h-24 md:w-24 h-20 w-20 relative z-0"
+                  className="lg:h-32 lg:w-32 md:h-24 md:w-24 h-20 w-20 relative"
                 >
                   <Image
                     unoptimized
                     src={`https://mindreader-web.s3.amazonaws.com/image_v2/${imageId}.jpg`}
                     alt="Mindreader Visualization"
-                    className="block w-full rounded"
+                    className="block w-full z-0"
                     width={600}
                     height={600}
                   />

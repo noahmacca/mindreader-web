@@ -1,19 +1,31 @@
 import prisma from "../lib/prisma";
-import { Feature } from "@prisma/client";
+import { Feature, ModelName, FeatureType } from "@prisma/client";
+
+interface WhereClause {
+  modelName: ModelName;
+  featureType: FeatureType;
+  layerIdx?: number;
+}
 
 export async function getFeaturesForLayer(
+  selectedModel: string,
+  selectedFeatures: string,
   selectedLayers: string,
   selectedSort: string
 ): Promise<Feature[]> {
   try {
-    // Use params to select layer
-    let whereClause = {};
+    // Use params to select layer, model, and feature type
+    let whereClause: WhereClause = {
+      modelName: selectedModel.toUpperCase() as ModelName,
+      featureType: selectedFeatures.toUpperCase() as FeatureType,
+    };
+    console.log("getFeaturesForLayer", whereClause);
     if (selectedLayers !== "all") {
       const layerIdx = parseInt(selectedLayers, 10);
       if (isNaN(layerIdx)) {
         throw new Error("selectedLayers must be 'all' or a valid integer");
       }
-      whereClause = { layerIdx };
+      whereClause.layerIdx = layerIdx;
     }
 
     // Use params for sortBy

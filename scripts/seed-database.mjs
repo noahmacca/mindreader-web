@@ -14,8 +14,7 @@ async function readAndParseCSV(filePath) {
 async function main() {
   console.log("hello");
   await prisma.feature.deleteMany();
-  // await prisma.image.deleteMany();
-  // await prisma.featureImageActivation.deleteMany();
+  await prisma.featureImageActivationPatch.deleteMany();
   console.log("deleted all");
 
   console.log("writing features table");

@@ -56,10 +56,7 @@ const HoverGrid: React.FC<HoverGridProps> = ({
   const maxActivation = Math.max(...squares.map((s) => s.info.activation));
 
   return (
-    <div
-      className={`grid grid-cols-14 grid-rows-14`}
-      style={{ height: "100%" }}
-    >
+    <div className="grid grid-cols-14 grid-rows-14" style={{ height: "100%" }}>
       {squares.map((square, index) => (
         <div
           key={index}
@@ -77,6 +74,7 @@ const HoverGrid: React.FC<HoverGridProps> = ({
               opacity: hoveredSquare === square.id ? 0.7 : 0.35,
               height: "100%",
               width: "100%",
+              // border: "0.1px solid white",
             }}
           />
           {hoveredSquare === square.id && (
