@@ -7,6 +7,23 @@ interface WhereClause {
   layerIdx?: number;
 }
 
+export async function getUniqueFeatureAttributes() {
+  const uniqueCombinations = await prisma.feature.groupBy({
+    by: ["modelName", "featureType", "layerType", "layerIdx"],
+    _count: {
+      id: true,
+    },
+  });
+
+  return uniqueCombinations.map((item) => ({
+    modelName: item.modelName,
+    featureType: item.featureType,
+    layerType: item.layerType,
+    layerIdx: item.layerIdx,
+    count: item._count.id,
+  }));
+}
+
 export async function getFeaturesForLayer(
   selectedModel: string,
   selectedFeatures: string,
@@ -19,7 +36,6 @@ export async function getFeaturesForLayer(
       modelName: selectedModel.toUpperCase() as ModelName,
       featureType: selectedFeatures.toUpperCase() as FeatureType,
     };
-    console.log("getFeaturesForLayer", whereClause);
     if (selectedLayers !== "all") {
       const layerIdx = parseInt(selectedLayers, 10);
       if (isNaN(layerIdx)) {
@@ -32,12 +48,12 @@ export async function getFeaturesForLayer(
     let orderByClause = {};
     let skip = 0;
     switch (selectedSort) {
-      case "max":
+      case "max_activation":
         orderByClause = {
           maxActivation: "desc",
         };
         break;
-      case "min":
+      case "min_activation":
         orderByClause = {
           maxActivation: "asc",
         };

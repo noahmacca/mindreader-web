@@ -1,7 +1,10 @@
 import Footer from "@/app/lib/ui/Footer";
 import FeatureList from "@/app/lib/ui/FeatureList";
 import FeatureCardFilters from "@/app/lib/ui/FeatureCardFilters";
-import { getFeaturesForLayer } from "@/app/lib/data";
+import {
+  getFeaturesForLayer,
+  getUniqueFeatureAttributes,
+} from "@/app/lib/data";
 
 const prettifyQueryParam = (param: string) => {
   return param
@@ -19,6 +22,8 @@ const Page: React.FC<{
     layers?: string;
   };
 }> = async ({ params, searchParams }) => {
+  const filterValStats = await getUniqueFeatureAttributes();
+
   const selectedModel = searchParams?.model || "";
   const selectedFeatures = searchParams?.features || "";
   const selectedSort = searchParams?.sort || "";
@@ -50,7 +55,7 @@ const Page: React.FC<{
       </div>
       <div className="w-full border-t border-gray-300 my-8"></div>
 
-      <FeatureCardFilters />
+      <FeatureCardFilters filterValStats={filterValStats} />
       {featureIds.length === 0 ? (
         <div className="text-red-700 text-xl mt-10">
           <p>No feature data found 😅</p>
