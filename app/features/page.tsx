@@ -1,7 +1,3 @@
-// "use client";
-
-import Link from "next/link";
-
 import Footer from "@/app/lib/ui/Footer";
 import FeatureList from "@/app/lib/ui/FeatureList";
 import FeatureCardFilters from "@/app/lib/ui/FeatureCardFilters";
