@@ -49,6 +49,10 @@ const HoverGrid: React.FC<HoverGridProps> = ({
         )
       )
     );
+    if (!index) {
+      // TODO figure out why we hit this
+      return "rgb(0,0,0)";
+    }
     const [r, g, b] = plasmaCmap[index];
     return `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
   };

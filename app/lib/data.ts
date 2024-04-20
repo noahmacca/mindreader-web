@@ -77,8 +77,6 @@ export async function getFeaturesForLayer(
         );
     }
 
-    console.log("data", whereClause);
-
     const features = await prisma.feature.findMany({
       where: whereClause,
       orderBy: orderByClause,

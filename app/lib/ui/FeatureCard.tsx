@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { getFeatureById, Feature } from "@/app/actions";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
@@ -16,6 +17,9 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   );
 
   const [feature, setFeature] = useState<Feature | null>(null);
+
+  const searchParams = useSearchParams();
+  const userSearchQuery = searchParams.get("search");
 
   useEffect(() => {
     async function getFeatureData() {
@@ -36,6 +40,46 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
       </div>
     );
   }
+  const highlightSearchQuery = (
+    text: string,
+    query: string | null
+  ): (string | JSX.Element)[] => {
+    const parts = text.split(",");
+    const highlightedParts: (string | JSX.Element)[] = [];
+    parts.forEach((part, index) => {
+      const match = part.match(/\((\d+\.\d+)%\)/);
+      const percentage = match ? parseFloat(match[1]) : null;
+      let opacity = 1; // Default opacity
+      if (percentage !== null) {
+        if (percentage >= 10) {
+          opacity = 1;
+        } else if (percentage <= 2) {
+          opacity = 0.15;
+        } else {
+          opacity = ((percentage - 2) / (10 - 2)) * 0.75 + 0.15;
+        }
+      }
+
+      highlightedParts.push(
+        query && part.toLowerCase().includes(query.toLowerCase()) ? (
+          <span className="bg-yellow-300" key={index}>
+            {part}
+            {index < parts.length - 1 ? "," : ""}
+          </span>
+        ) : (
+          <span
+            className="font-normal"
+            key={index}
+            style={{ opacity: opacity }}
+          >
+            {part}
+            {index < parts.length - 1 ? "," : ""}
+          </span>
+        )
+      );
+    });
+    return highlightedParts;
+  };
 
   return (
     <div
@@ -55,7 +99,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
             <div className="font-bold">Autointerp</div>
             <div className="font-light">
               {feature.autoInterp
-                ? feature.autoInterp
+                ? highlightSearchQuery(feature.autoInterp, userSearchQuery)
                 : "No autointerp description found."}
             </div>
           </div>
