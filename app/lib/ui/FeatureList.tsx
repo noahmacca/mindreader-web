@@ -44,7 +44,7 @@ const FeatureList: React.FC<{
       <List
         height={dimensions.height}
         width={dimensions.width}
-        itemSize={435}
+        itemSize={570}
         itemCount={featureIds.length}
       >
         {Row}

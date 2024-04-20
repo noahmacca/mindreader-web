@@ -5,6 +5,9 @@ interface WhereClause {
   modelName: ModelName;
   featureType: FeatureType;
   layerIdx?: number;
+  autoInterp?: {
+    contains: string;
+  };
 }
 
 export async function getUniqueFeatureAttributes() {
@@ -28,7 +31,8 @@ export async function getFeaturesForLayer(
   selectedModel: string,
   selectedFeatures: string,
   selectedLayers: string,
-  selectedSort: string
+  selectedSort: string,
+  searchString?: string
 ): Promise<Feature[]> {
   try {
     // Use params to select layer, model, and feature type
@@ -42,6 +46,9 @@ export async function getFeaturesForLayer(
         throw new Error("selectedLayers must be 'all' or a valid integer");
       }
       whereClause.layerIdx = layerIdx;
+    }
+    if (searchString) {
+      whereClause.autoInterp = { contains: searchString };
     }
 
     // Use params for sortBy
@@ -69,6 +76,8 @@ export async function getFeaturesForLayer(
           "Invalid selectedSort value. Must be 'max', 'min', or 'random'."
         );
     }
+
+    console.log("data", whereClause);
 
     const features = await prisma.feature.findMany({
       where: whereClause,

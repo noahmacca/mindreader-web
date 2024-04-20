@@ -40,7 +40,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   return (
     <div
       className="p-6 bg-white border rounded-lg w-full overflow-hidden"
-      style={{ height: "425px" }}
+      style={{ height: "550px" }}
     >
       <div className="text-xl flex flex-row">
         <div>
@@ -80,7 +80,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
           <div className="font-bold mb-2">Most Activating Images</div>
           <div className="flex flex-wrap gap-2 relative">
             {feature.highestActivatingImages
-              .slice(0, 16)
+              // .slice(0, 16)
               .map((imageId, imgIdx) => (
                 <div
                   key={imgIdx}

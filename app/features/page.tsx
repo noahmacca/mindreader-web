@@ -20,6 +20,7 @@ const Page: React.FC<{
     features?: string;
     sort?: string;
     layers?: string;
+    search?: string;
   };
 }> = async ({ params, searchParams }) => {
   const filterValStats = await getUniqueFeatureAttributes();
@@ -33,7 +34,8 @@ const Page: React.FC<{
     selectedModel,
     selectedFeatures,
     selectedLayers,
-    selectedSort
+    selectedSort,
+    searchParams?.search
   );
   const featureIds: string[] = features.map((f) => f.id);
 

@@ -12,7 +12,7 @@ async function readAndParseCSV(filePath) {
 }
 
 async function main() {
-  console.log("hello");
+  console.log("Starting seed-database.");
   await prisma.feature.deleteMany();
   await prisma.featureImageActivationPatch.deleteMany();
   console.log("deleted all");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const prettifyQueryParam = (param: string) => {
   return param
@@ -34,6 +35,9 @@ export default function FeatureCardFilters({
   filterValStats: FeatureStat[];
 }) {
   const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -90,6 +94,17 @@ export default function FeatureCardFilters({
     replace(`${pathname}?${params.toString()}`);
   };
 
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams);
+    if (searchQuery === "") {
+      params.delete("search");
+    } else {
+      params.set("search", searchQuery);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
   // Ensure selections are valid to prevent runtime errors
   const validModel = modelData[model] ? model : sortedModels[0][0];
   const validFeatures = modelData[validModel].featureTypes[features]
@@ -107,6 +122,24 @@ export default function FeatureCardFilters({
 
   return (
     <div className="flex flex-row space-x-4">
+      <div className="flex flex-col items-start">
+        <label className="mb-1">Search</label>
+        <form onSubmit={handleSearch} className="flex space-x-0.5">
+          <input
+            type="text"
+            className="border border-gray-300 rounded-md px-2 py-1"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search..."
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+          >
+            Go
+          </button>
+        </form>
+      </div>
       <div className="flex flex-col items-start">
         <label className="mb-1">Model</label>
         <select
