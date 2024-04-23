@@ -12,11 +12,21 @@ const FeatureList: React.FC<{
   const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
 
   useEffect(() => {
-    // Set dimensions once the window is available
-    setDimensions({
-      height: window.innerHeight * 0.7,
-      width: window.innerWidth,
-    });
+    const handleResize = () => {
+      setDimensions({
+        height: window.innerHeight * 0.75,
+        width: window.innerWidth,
+      });
+    };
+
+    // Set initial dimensions
+    handleResize();
+
+    // Update dimensions on window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const Row = ({
@@ -43,8 +53,8 @@ const FeatureList: React.FC<{
     <div className="mt-4 rounded">
       <List
         height={dimensions.height}
-        width={dimensions.width}
-        itemSize={570}
+        width={"100%"}
+        itemSize={615}
         itemCount={featureIds.length}
       >
         {Row}

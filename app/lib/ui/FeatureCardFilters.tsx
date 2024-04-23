@@ -120,30 +120,37 @@ export default function FeatureCardFilters({
     return a.layerIdx - b.layerIdx;
   });
 
+  const renderLabelAndInput = (label: string, children: React.ReactNode) => (
+    <div className="flex flex-row space-x-2 items-center lg:space-x-0 lg:flex-col lg:space-y-0.5 lg:items-start">
+      <label className="font-semibold">{label}</label>
+      {children}
+    </div>
+  );
+
   return (
-    <div className="flex flex-row space-x-4">
-      <div className="flex flex-col items-start">
-        <label className="mb-1">Search</label>
-        <form onSubmit={handleSearch} className="flex space-x-0.5">
+    <div className="flex text-sm flex-col space-y-1 lg:flex-row lg:space-x-4 lg:text-lg lg:space-y-0">
+      {renderLabelAndInput(
+        "Search",
+        <form onSubmit={handleSearch} className="flex space-x-0.5 lg:space-x-0">
           <input
             type="text"
-            className="border border-gray-300 rounded-md px-2 py-1"
+            className="border border-gray-300 rounded-md px-2 py-0.5"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder='For example, "dog"'
           />
           <button
             type="submit"
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded-md"
+            className="border border-gray-300 rounded-md px-2 py-0.5"
           >
             Go
           </button>
         </form>
-      </div>
-      <div className="flex flex-col items-start">
-        <label className="mb-1">Model</label>
+      )}
+      {renderLabelAndInput(
+        "Model",
         <select
-          className="border border-gray-300 rounded-md px-2 py-1 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
           value={validModel}
           onChange={(e) => handleSelectChange("model", e.target.value)}
         >
@@ -153,11 +160,11 @@ export default function FeatureCardFilters({
             </option>
           ))}
         </select>
-      </div>
-      <div className="flex flex-col items-start">
-        <label className="mb-1">Features</label>
+      )}
+      {renderLabelAndInput(
+        "Features",
         <select
-          className="border border-gray-300 rounded-md px-2 py-1 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
           value={validFeatures}
           onChange={(e) => handleSelectChange("features", e.target.value)}
         >
@@ -169,11 +176,11 @@ export default function FeatureCardFilters({
             )
           )}
         </select>
-      </div>
-      <div className="flex flex-col items-start">
-        <label className="mb-1">Layers</label>
+      )}
+      {renderLabelAndInput(
+        "Layers",
         <select
-          className="border border-gray-300 rounded-md px-2 py-1 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
           value={layers}
           onChange={(e) => handleSelectChange("layers", e.target.value)}
         >
@@ -185,11 +192,11 @@ export default function FeatureCardFilters({
             >{`${layerType} ${layerIdx}`}</option>
           ))}
         </select>
-      </div>
-      <div className="flex flex-col items-start">
-        <label className="mb-1">Sort By</label>
+      )}
+      {renderLabelAndInput(
+        "Sort By",
         <select
-          className="border border-gray-300 rounded-md px-2 py-1 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
           value={sort}
           onChange={(e) => handleSelectChange("sort", e.target.value)}
         >
@@ -197,7 +204,7 @@ export default function FeatureCardFilters({
           <option value="min_activation">Min Activation</option>
           <option value="random">Random</option>
         </select>
-      </div>
+      )}
     </div>
   );
 }

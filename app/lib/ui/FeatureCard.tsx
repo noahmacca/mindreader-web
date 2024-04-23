@@ -31,12 +31,13 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
 
   if (!feature) {
     return (
-      <div className="p-6 bg-white border rounded-lg w-full h-1/4">
-        <div className="text-xl h-1/4">Loading Feature {featureId}</div>
+      <div
+        className="p-3 lg:p-6 bg-white border rounded-lg w-full"
+        style={{ height: "610px" }}
+      >
+        <div className="text-md lg:text-xl">Loading {featureId}</div>
         <div className="w-full border-t border-gray-300 my-4" />
-        <div className="my-48">
-          <LoadingSpinner />
-        </div>
+        <LoadingSpinner />
       </div>
     );
   }
@@ -83,18 +84,18 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
 
   return (
     <div
-      className="p-6 bg-white border rounded-lg w-full overflow-hidden"
-      style={{ height: "550px" }}
+      className="p-3 lg:p-6 bg-white border rounded-lg w-full overflow-hidden flex-row"
+      style={{ height: "610px" }}
     >
-      <div className="text-xl flex flex-row">
+      <div className="text-md lg:text-xl flex flex-row">
         <div>
           {`L:${feature.layerIdx} (${feature.layerType}) N:${feature.featureIdx}`}{" "}
           <b>{feature.humanInterp}</b>
         </div>
       </div>
-      <div className="w-full border-t border-gray-300 my-4" />
-      <div className="flex flex-row space-x-10 w-full">
-        <div className="flex flex-col space-y-4 w-1/4">
+      <div className="w-full border-t border-gray-300 my-2 lg:my-4" />
+      <div className="text-sm lg:text-lg flex flex-col lg:flex-row lg:space-x-10 w-full">
+        <div className="flex flex-col space-y-2 lg:space-y-4 w-full lg:w-1/4">
           <div>
             <div className="font-bold">Autointerp</div>
             <div className="font-light">
@@ -108,8 +109,8 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
             <div>TODO</div>
           </div>
           <div>
-            <div className="font-bold mb-4">Activations</div>
-            <div className="h-40 -ml-4 pr-4">
+            <div className="font-bold mb-1 lg:mb-2">Activations</div>
+            <div className="h-28 lg:h-40 -ml-6 pr-4">
               <HistogramChart
                 data={feature.activationHistVals.map((val, idx) => ({
                   bin: val.x,
@@ -120,23 +121,19 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
             </div>
           </div>
         </div>
-        <div className="w-3/4">
-          <div className="font-bold mb-2">Most Activating Images</div>
-          <div className="flex flex-wrap gap-2 relative">
+        <div className="lg:w-3/4">
+          <div className="font-bold mb-1 lg:mb-2">Most Activating Images</div>
+          <div className="grid grid-cols-4 xl:grid-cols-8 gap-0.5 md:gap-2 relative">
             {feature.highestActivatingImages
-              // .slice(0, 16)
+              .slice(0, window.innerWidth <= 640 ? 12 : 24)
               .map((imageId, imgIdx) => (
-                <div
-                  key={imgIdx}
-                  className="lg:h-32 lg:w-32 md:h-24 md:w-24 h-20 w-20 relative"
-                >
+                <div key={imgIdx} className="relative aspect-square">
                   <Image
                     unoptimized
                     src={`https://mindreader-web.s3.amazonaws.com/image_v2/${imageId}.jpg`}
                     alt="Mindreader Visualization"
-                    className="block w-full z-0"
-                    width={600}
-                    height={600}
+                    className="block w-full h-full z-0 object-cover"
+                    layout="fill"
                   />
                   <div className="absolute inset-0">
                     <HoverGrid

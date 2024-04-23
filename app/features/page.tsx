@@ -40,9 +40,9 @@ const Page: React.FC<{
   const featureIds: string[] = features.map((f) => f.id);
 
   return (
-    <main className="flex min-h-screen flex-col p-4 md:p-24 bg-stone-100">
+    <main className="flex min-h-screen flex-col p-4 md:p-16 bg-stone-100">
       <div>
-        <div className="flex flex-row space-x-4 text-2xl">
+        <div className="flex flex-row space-x-4 text-lg lg:text-2xl">
           <div>
             Model <b>{prettifyQueryParam(selectedModel)}</b>
           </div>
@@ -50,12 +50,12 @@ const Page: React.FC<{
             Visualizing <b>{prettifyQueryParam(selectedFeatures)}</b>
           </div>
         </div>
-        <div className="mt-4 w-full text-gray-700">
+        <div className="mt-4 w-full text-gray-700 text-sm lg:text-md">
           The visualization below describes the information contained in each
-          neuron in the network.
+          feature in the network.
         </div>
       </div>
-      <div className="w-full border-t border-gray-300 my-8"></div>
+      <div className="w-full border-t border-gray-300 my-3 lg:my-8"></div>
 
       <FeatureCardFilters filterValStats={filterValStats} />
       {featureIds.length === 0 ? (
@@ -65,7 +65,6 @@ const Page: React.FC<{
       ) : (
         <FeatureList featureIds={featureIds} />
       )}
-      <Footer />
     </main>
   );
 };
