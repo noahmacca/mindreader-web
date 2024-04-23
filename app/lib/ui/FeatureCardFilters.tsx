@@ -130,11 +130,11 @@ export default function FeatureCardFilters({
             className="border border-gray-300 rounded-md px-2 py-1"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search..."
+            placeholder='For example, "dog"'
           />
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded-md"
           >
             Go
           </button>

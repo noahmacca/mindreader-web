@@ -59,8 +59,8 @@ const Page: React.FC<{
 
       <FeatureCardFilters filterValStats={filterValStats} />
       {featureIds.length === 0 ? (
-        <div className="text-red-700 text-xl mt-10">
-          <p>No feature data found 😅</p>
+        <div className="text-gray-700 text-xl mt-10">
+          <p>No feature data found :(</p>
         </div>
       ) : (
         <FeatureList featureIds={featureIds} />

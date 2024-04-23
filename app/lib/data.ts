@@ -48,7 +48,7 @@ export async function getFeaturesForLayer(
       whereClause.layerIdx = layerIdx;
     }
     if (searchString) {
-      whereClause.autoInterp = { contains: searchString };
+      whereClause.autoInterp = { contains: searchString.toLowerCase() };
     }
 
     // Use params for sortBy
