@@ -50,7 +50,7 @@ const Page: React.FC<{
             Visualizing <b>{prettifyQueryParam(selectedFeatures)}</b>
           </div>
         </div>
-        <div className="mt-4 w-full text-gray-700 text-sm lg:text-md">
+        <div className="mt-4 w-full text-gray-700 text-sm lg:text-lg">
           The visualization below describes the information contained in each
           feature in the network.
         </div>

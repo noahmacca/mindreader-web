@@ -121,17 +121,17 @@ export default function FeatureCardFilters({
   });
 
   const renderLabelAndInput = (label: string, children: React.ReactNode) => (
-    <div className="flex flex-row space-x-2 items-center lg:space-x-0 lg:flex-col lg:space-y-0.5 lg:items-start">
+    <div className="flex flex-row space-x-2 items-center md:space-x-0 md:flex-col md:space-y-0.5 md:items-start">
       <label className="font-semibold">{label}</label>
       {children}
     </div>
   );
 
   return (
-    <div className="flex text-sm flex-col space-y-1 lg:flex-row lg:space-x-4 lg:text-lg lg:space-y-0">
+    <div className="flex text-sm flex-col space-y-1 md:flex-row md:space-x-4 md:text-lg md:space-y-0">
       {renderLabelAndInput(
         "Search",
-        <form onSubmit={handleSearch} className="flex space-x-0.5 lg:space-x-0">
+        <form onSubmit={handleSearch} className="flex space-x-0.5 md:space-x-0">
           <input
             type="text"
             className="border border-gray-300 rounded-md px-2 py-0.5"

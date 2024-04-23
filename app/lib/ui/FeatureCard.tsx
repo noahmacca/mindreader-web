@@ -110,7 +110,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
           </div>
           <div>
             <div className="font-bold mb-1 lg:mb-2">Activations</div>
-            <div className="h-28 lg:h-40 -ml-6 pr-4">
+            <div className="h-28 lg:h-48 -ml-6 pr-4">
               <HistogramChart
                 data={feature.activationHistVals.map((val, idx) => ({
                   bin: val.x,
@@ -123,7 +123,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
         </div>
         <div className="lg:w-3/4">
           <div className="font-bold mb-1 lg:mb-2">Most Activating Images</div>
-          <div className="grid grid-cols-4 xl:grid-cols-8 gap-0.5 md:gap-2 relative">
+          <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-7 2xl:grid-cols-8 gap-0.5 md:gap-2 relative">
             {feature.highestActivatingImages
               .slice(0, window.innerWidth <= 640 ? 12 : 24)
               .map((imageId, imgIdx) => (
@@ -133,7 +133,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
                     src={`https://mindreader-web.s3.amazonaws.com/image_v2/${imageId}.jpg`}
                     alt="Mindreader Visualization"
                     className="block w-full h-full z-0 object-cover"
-                    layout="fill"
+                    fill
                   />
                   <div className="absolute inset-0">
                     <HoverGrid
