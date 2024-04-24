@@ -35,7 +35,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
         className="p-3 lg:p-6 bg-white border rounded-lg w-full"
         style={{ height: "610px" }}
       >
-        <div className="text-md lg:text-xl">Loading {featureId}</div>
+        <div className="text-md lg:text-xl">{featureId} (Loading)</div>
         <div className="w-full border-t border-gray-300 my-4" />
         <LoadingSpinner />
       </div>

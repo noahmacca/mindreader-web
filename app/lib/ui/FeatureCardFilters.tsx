@@ -69,7 +69,7 @@ export default function FeatureCardFilters({
   const features =
     searchParams.get("features") ||
     Object.keys(sortedModels[0][1].featureTypes)[0];
-  const layers = searchParams.get("layers") || "all";
+  const layers = searchParams.get("layers") || "8";
   const sort = searchParams.get("sort") || "max_activation";
 
   // Check if any of the parameters are not set and set them to default values
