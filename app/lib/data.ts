@@ -60,6 +60,11 @@ export async function getFeaturesForLayer(
           maxActivation: "desc",
         };
         break;
+      case "max_autointerp_label":
+        orderByClause = {
+          maxAutointerpLabelFrac: "desc",
+        };
+        break;
       case "min_activation":
         orderByClause = {
           maxActivation: "asc",
@@ -83,6 +88,7 @@ export async function getFeaturesForLayer(
       skip: skip,
       take: 100,
     });
+    // console.log('orderByClause', orderByClause)
 
     if (features.length === 0) {
       throw new Error(`No features found for layer index ${selectedLayers}`);

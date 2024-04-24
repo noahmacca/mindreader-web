@@ -24,6 +24,7 @@ model Feature {
   autoInterp                    String?
   activationHistVals            Json[]
   maxActivation                 Float
+  maxAutointerpLabelFrac        Float?
   featureImageActivationPatches FeatureImageActivationPatch[]
   startFeatureCorrelations      FeatureCorrelation[]          @relation("startFeature")
   endFeatureCorrelations        FeatureCorrelation[]          @relation("endFeature")

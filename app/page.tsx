@@ -21,9 +21,6 @@ export default async function Home() {
           Explore Features
         </Link>
       </div>
-      <div className="mt-4 italic text-gray-400 text-xs md:text-sm">
-        More coming soon...
-      </div>
       <Footer />
     </main>
   );

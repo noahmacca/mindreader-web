@@ -12,7 +12,9 @@ async function readAndParseCSV(filePath) {
 }
 
 async function main() {
-  console.log("Starting seed-database.");
+  console.log(
+    "Starting seed-database. Deleting everything from feature and featureImnageActivationPatch"
+  );
   await prisma.feature.deleteMany();
   await prisma.featureImageActivationPatch.deleteMany();
   console.log("deleted all");
@@ -24,6 +26,7 @@ async function main() {
     feature.layerIdx = parseInt(feature.layerIdx, 10);
     feature.featureIdx = parseInt(feature.featureIdx, 10);
     feature.maxActivation = parseFloat(feature.maxActivation);
+    feature.maxAutointerpLabelFrac = parseFloat(feature.maxAutointerpLabelFrac);
   });
   console.log(
     "Parsed features from CSV into JS object:",
@@ -41,6 +44,7 @@ async function main() {
       autoInterp: feature.autoInterp,
       activationHistVals: feature.activationHistVals,
       maxActivation: feature.maxActivation,
+      maxAutointerpLabelFrac: feature.maxAutointerpLabelFrac,
     })),
     // skipDuplicates: true, // Optional: skips entries that conflict on unique constraints
   });

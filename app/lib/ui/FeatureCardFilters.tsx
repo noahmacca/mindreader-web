@@ -201,6 +201,7 @@ export default function FeatureCardFilters({
           onChange={(e) => handleSelectChange("sort", e.target.value)}
         >
           <option value="max_activation">Max Activation</option>
+          <option value="max_autointerp_label">Best Top Label</option>
           <option value="min_activation">Min Activation</option>
           <option value="random">Random</option>
         </select>
