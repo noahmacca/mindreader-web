@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "./lib/ui/Footer";
 
 export default async function Home() {
@@ -17,13 +16,10 @@ export default async function Home() {
       <div className="mt-8">
         <Link
           className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          href="/neuron"
+          href="/features"
         >
-          Explore TinyCLIP
+          Explore Features
         </Link>
-      </div>
-      <div className="mt-4 italic text-gray-400 text-xs md:text-sm">
-        More coming soon...
       </div>
       <Footer />
     </main>
