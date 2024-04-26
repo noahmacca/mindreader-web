@@ -60,14 +60,29 @@ export async function getFeaturesForLayer(
           maxActivation: "desc",
         };
         break;
-      case "max_autointerp_label":
-        orderByClause = {
-          maxAutointerpLabelFrac: "desc",
-        };
-        break;
       case "min_activation":
         orderByClause = {
           maxActivation: "asc",
+        };
+        break;
+      case "max_autointerp_score":
+        orderByClause = {
+          autointerpScoreMax: "desc",
+        };
+        break;
+      case "min_autointerp_score":
+        orderByClause = {
+          autointerpScoreMax: "asc",
+        };
+        break;
+      case "max_autointerp_gini":
+        orderByClause = {
+          autointerpScoreGini: "desc",
+        };
+        break;
+      case "min_autointerp_gini":
+        orderByClause = {
+          autointerpScoreGini: "asc",
         };
         break;
       case "random":
@@ -77,9 +92,7 @@ export async function getFeaturesForLayer(
         skip = Math.floor(Math.random() * featuresCount);
         break;
       default:
-        throw new Error(
-          "Invalid selectedSort value. Must be 'max', 'min', or 'random'."
-        );
+        throw new Error(`Invalid selectedSort value=${selectedSort}`);
     }
 
     const features = await prisma.feature.findMany({

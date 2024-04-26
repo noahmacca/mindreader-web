@@ -26,7 +26,7 @@ async function main() {
     feature.layerIdx = parseInt(feature.layerIdx, 10);
     feature.featureIdx = parseInt(feature.featureIdx, 10);
     feature.maxActivation = parseFloat(feature.maxActivation);
-    feature.maxAutointerpLabelFrac = parseFloat(feature.maxAutointerpLabelFrac);
+    feature.maxAutointerpZScore = parseFloat(feature.maxAutointerpZScore);
   });
   console.log(
     "Parsed features from CSV into JS object:",
@@ -44,7 +44,7 @@ async function main() {
       autoInterp: feature.autoInterp,
       activationHistVals: feature.activationHistVals,
       maxActivation: feature.maxActivation,
-      maxAutointerpLabelFrac: feature.maxAutointerpLabelFrac,
+      maxAutointerpZScore: feature.maxAutointerpZScore,
     })),
     // skipDuplicates: true, // Optional: skips entries that conflict on unique constraints
   });

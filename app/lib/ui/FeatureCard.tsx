@@ -41,47 +41,41 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
       </div>
     );
   }
-  const highlightSearchQuery = (
+
+  const prettyAutointerpString = (
     text: string,
     query: string | null
-  ): (string | JSX.Element)[] => {
-    const parts = text.split(",");
-    const highlightedParts: (string | JSX.Element)[] = [];
-    parts.forEach((part, index) => {
-      const match = part.match(/\((\d+\.\d+)%\)/);
-      const percentage = match ? parseFloat(match[1]) : null;
-      let opacity = 1; // Default opacity
-      if (percentage !== null) {
-        if (percentage >= 10) {
-          opacity = 1;
-        } else if (percentage <= 2) {
-          opacity = 0.15;
-        } else {
-          opacity = ((percentage - 2) / (10 - 2)) * 0.75 + 0.15;
-        }
+  ): JSX.Element | string => {
+    try {
+      const parsed = JSON.parse(text);
+      if (
+        Array.isArray(parsed) &&
+        parsed.every((item) => Array.isArray(item) && item.length === 2)
+      ) {
+        return (
+          <div>
+            {parsed.map(([label, score], index) => (
+              <>
+                {index > 0 && ", "}
+                {query && label.toLowerCase().includes(query.toLowerCase()) ? (
+                  <span key={index} style={{ backgroundColor: "#ffff99" }}>
+                    {label.charAt(0).toUpperCase() + label.slice(1)} ({score})
+                  </span>
+                ) : (
+                  <span key={index}>
+                    {label.charAt(0).toUpperCase() + label.slice(1)} ({score})
+                  </span>
+                )}
+              </>
+            ))}
+          </div>
+        );
       }
-
-      highlightedParts.push(
-        query && part.toLowerCase().includes(query.toLowerCase()) ? (
-          <span className="bg-yellow-300" key={index}>
-            {part}
-            {index < parts.length - 1 ? "," : ""}
-          </span>
-        ) : (
-          <span
-            className="font-normal"
-            key={index}
-            style={{ opacity: opacity }}
-          >
-            {part}
-            {index < parts.length - 1 ? "," : ""}
-          </span>
-        )
-      );
-    });
-    return highlightedParts;
+    } catch (error) {
+      console.error("Failed to parse autointerp text:", error);
+    }
+    return text; // Fallback to raw text if parsing fails or format is incorrect
   };
-
   return (
     <div
       className="p-3 lg:p-6 bg-white border rounded-lg w-full overflow-hidden flex-row"
@@ -97,17 +91,17 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
       <div className="text-sm lg:text-lg flex flex-col lg:flex-row lg:space-x-10 w-full">
         <div className="flex flex-col space-y-2 lg:space-y-4 w-full lg:w-1/4">
           <div>
-            <div className="font-bold">Autointerp</div>
+            <div className="font-bold">Autointerp (score)</div>
             <div className="font-light">
               {feature.autoInterp
-                ? highlightSearchQuery(feature.autoInterp, userSearchQuery)
+                ? prettyAutointerpString(feature.autoInterp, userSearchQuery)
                 : "No autointerp description found."}
             </div>
           </div>
-          <div>
-            <div className="font-bold">Correlated Upstream Features</div>
+          {/* <div>
+            <div className="font-bold">Correlated Features</div>
             <div>TODO</div>
-          </div>
+          </div> */}
           <div>
             <div className="font-bold mb-1 lg:mb-2">Activations</div>
             <div className="h-28 lg:h-48 -ml-6 pr-4">
