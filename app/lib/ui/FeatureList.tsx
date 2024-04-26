@@ -29,18 +29,6 @@ const FeatureList: React.FC<{
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => (
-    <div style={style}>
-      <FeatureCard featureId={featureIds[index]} />
-    </div>
-  );
-
   if (typeof window === "undefined") {
     return <LoadingSpinner />;
   }
@@ -56,8 +44,13 @@ const FeatureList: React.FC<{
         width={"100%"}
         itemSize={615}
         itemCount={featureIds.length}
+        overscanCount={1}
       >
-        {Row}
+        {({ index, style }) => (
+          <div style={style}>
+            <FeatureCard featureId={featureIds[index]} />
+          </div>
+        )}
       </List>
     </div>
   );

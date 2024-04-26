@@ -23,8 +23,14 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   const userSearchQuery = searchParams.get("search");
 
   useEffect(() => {
+    console.log(`Initial mount for FeatureCard, featureId=${featureId}`);
+  }, []);
+
+  useEffect(() => {
     async function getFeatureData() {
+      console.log(`FeatureCard FeatureId=${featureId} getting feature data`);
       const response = await getFeatureById(featureId);
+      console.log(`FeatureCard FeatureId=${featureId} got feature data`);
       setFeature(response);
     }
     getFeatureData();

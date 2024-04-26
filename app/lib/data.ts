@@ -101,7 +101,6 @@ export async function getFeaturesForLayer(
       skip: skip,
       take: 50,
     });
-    // console.log('orderByClause', orderByClause)
 
     if (features.length === 0) {
       throw new Error(`No features found for layer index ${selectedLayers}`);
