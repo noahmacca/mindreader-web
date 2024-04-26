@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { plasmaCmap } from "@/app/lib/constants";
 
@@ -12,18 +12,38 @@ interface HoverGridProps {
     patchIdx: number;
   }>;
   onSquareHover?: (activation: number | null) => void;
+  initTooltip?: boolean;
 }
 
 const HoverGrid: React.FC<HoverGridProps> = ({
   infoStrings,
   onSquareHover,
+  initTooltip = false,
 }) => {
-  const [hoveredSquare, setHoveredSquare] = useState<number | null>(null);
-
   const squares = infoStrings.map((info, index) => ({
     id: index,
     info,
   }));
+
+  const maxActivationIndex = squares.reduce(
+    (maxIdx, square, idx, arr) =>
+      arr[maxIdx].info.activation > square.info.activation ||
+      square.info.label === "None"
+        ? maxIdx
+        : idx,
+    0
+  );
+
+  const [hoveredSquare, setHoveredSquare] = useState<number | null>(
+    initTooltip ? maxActivationIndex : null
+  );
+
+  useEffect(() => {
+    if (initTooltip) {
+      onSquareHover &&
+        onSquareHover(squares[maxActivationIndex].info.activation);
+    }
+  }, [initTooltip, maxActivationIndex, onSquareHover, squares]);
 
   const handleMouseEnter = (squareId: number) => {
     setHoveredSquare(squareId);

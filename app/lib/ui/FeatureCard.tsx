@@ -140,6 +140,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
                       onSquareHover={(squareIdx) => {
                         setSelectedActivation(squareIdx);
                       }}
+                      initTooltip={imgIdx === 0}
                     />
                   </div>
                 </div>
