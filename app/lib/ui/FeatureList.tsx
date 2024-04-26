@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { FixedSizeList as List } from "react-window";
 import LoadingSpinner from "@/app/lib/ui/LoadingSpinner";
 
@@ -10,11 +10,6 @@ const FeatureList: React.FC<{
   featureIds: string[];
 }> = ({ featureIds }) => {
   const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
-  const [visibleFeatureIds, setVisibleFeatureIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    setVisibleFeatureIds(featureIds.slice(0, 5));
-  }, [featureIds]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,20 +29,6 @@ const FeatureList: React.FC<{
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleItemsRendered = useCallback(
-    ({ visibleStopIndex }: { visibleStopIndex: number }) => {
-      if (visibleStopIndex === visibleFeatureIds.length - 1) {
-        // Load more items when the last item is visible
-        const nextVisibleFeatureIds = featureIds.slice(
-          0,
-          visibleFeatureIds.length + 3
-        );
-        setVisibleFeatureIds(nextVisibleFeatureIds);
-      }
-    },
-    [visibleFeatureIds.length, featureIds]
-  );
-
   const Row = ({
     index,
     style,
@@ -56,7 +37,7 @@ const FeatureList: React.FC<{
     style: React.CSSProperties;
   }) => (
     <div style={style}>
-      <FeatureCard featureId={visibleFeatureIds[index]} />
+      <FeatureCard featureId={featureIds[index]} />
     </div>
   );
 
@@ -74,8 +55,7 @@ const FeatureList: React.FC<{
         height={dimensions.height}
         width={"100%"}
         itemSize={615}
-        itemCount={visibleFeatureIds.length}
-        onItemsRendered={handleItemsRendered}
+        itemCount={featureIds.length}
       >
         {Row}
       </List>

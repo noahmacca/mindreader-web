@@ -17,6 +17,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
   );
 
   const [feature, setFeature] = useState<Feature | null>(null);
+  const [hasHovered, setHasHovered] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
   const userSearchQuery = searchParams.get("search");
@@ -55,18 +56,18 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
         return (
           <div>
             {parsed.map(([label, score], index) => (
-              <>
+              <span key={index}>
                 {index > 0 && ", "}
                 {query && label.toLowerCase().includes(query.toLowerCase()) ? (
-                  <span key={index} style={{ backgroundColor: "#ffff99" }}>
+                  <span style={{ backgroundColor: "#ffff99" }}>
                     {label.charAt(0).toUpperCase() + label.slice(1)} ({score})
                   </span>
                 ) : (
-                  <span key={index}>
+                  <span>
                     {label.charAt(0).toUpperCase() + label.slice(1)} ({score})
                   </span>
                 )}
-              </>
+              </span>
             ))}
           </div>
         );
@@ -76,6 +77,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
     }
     return text; // Fallback to raw text if parsing fails or format is incorrect
   };
+
   return (
     <div
       className="p-3 lg:p-6 bg-white border rounded-lg w-full overflow-hidden flex-row"
@@ -121,7 +123,11 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
             {feature.highestActivatingImages
               .slice(0, window.innerWidth <= 640 ? 12 : 24)
               .map((imageId, imgIdx) => (
-                <div key={imgIdx} className="relative aspect-square">
+                <div
+                  key={imgIdx}
+                  className="relative aspect-square"
+                  onMouseEnter={() => setHasHovered(true)}
+                >
                   <Image
                     unoptimized
                     src={`https://mindreader-web.s3.amazonaws.com/image_v2/${imageId}.jpg`}
@@ -137,10 +143,8 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
                         zScore: patch.activationZScore,
                         patchIdx: patch.patchIdx,
                       }))}
-                      onSquareHover={(squareIdx) => {
-                        setSelectedActivation(squareIdx);
-                      }}
-                      initTooltip={imgIdx === 0}
+                      onSquareHover={setSelectedActivation}
+                      showDefaultTooltip={!hasHovered && imgIdx === 0}
                     />
                   </div>
                 </div>

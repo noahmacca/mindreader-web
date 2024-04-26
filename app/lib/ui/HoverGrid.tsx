@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { plasmaCmap } from "@/app/lib/constants";
 
@@ -12,38 +12,34 @@ interface HoverGridProps {
     patchIdx: number;
   }>;
   onSquareHover?: (activation: number | null) => void;
-  initTooltip?: boolean;
+  showDefaultTooltip?: boolean;
 }
 
 const HoverGrid: React.FC<HoverGridProps> = ({
   infoStrings,
   onSquareHover,
-  initTooltip = false,
+  showDefaultTooltip = false,
 }) => {
   const squares = infoStrings.map((info, index) => ({
     id: index,
     info,
   }));
 
-  const maxActivationIndex = squares.reduce(
-    (maxIdx, square, idx, arr) =>
-      arr[maxIdx].info.activation > square.info.activation ||
-      square.info.label === "None"
-        ? maxIdx
-        : idx,
-    0
-  );
-
-  const [hoveredSquare, setHoveredSquare] = useState<number | null>(
-    initTooltip ? maxActivationIndex : null
-  );
+  const [hoveredSquare, setHoveredSquare] = useState<number | null>(null);
+  const prevShowDefaultTooltip = useRef(showDefaultTooltip);
 
   useEffect(() => {
-    if (initTooltip) {
-      onSquareHover &&
-        onSquareHover(squares[maxActivationIndex].info.activation);
+    if (showDefaultTooltip) {
+      const highestActivationSquare = squares.reduce((prev, current) => {
+        return prev.info.activation > current.info.activation ? prev : current;
+      });
+      setHoveredSquare(highestActivationSquare.id);
+      onSquareHover && onSquareHover(highestActivationSquare.info.activation);
+    } else if (prevShowDefaultTooltip.current && !showDefaultTooltip) {
+      setHoveredSquare(null);
     }
-  }, [initTooltip, maxActivationIndex, onSquareHover, squares]);
+    prevShowDefaultTooltip.current = showDefaultTooltip;
+  }, [showDefaultTooltip, squares, onSquareHover]);
 
   const handleMouseEnter = (squareId: number) => {
     setHoveredSquare(squareId);
@@ -51,8 +47,10 @@ const HoverGrid: React.FC<HoverGridProps> = ({
   };
 
   const handleMouseLeave = () => {
-    setHoveredSquare(null);
-    onSquareHover && onSquareHover(null);
+    if (!showDefaultTooltip) {
+      setHoveredSquare(null);
+      onSquareHover && onSquareHover(null);
+    }
   };
 
   const getColorForActivation = (

@@ -99,7 +99,7 @@ export async function getFeaturesForLayer(
       where: whereClause,
       orderBy: orderByClause,
       skip: skip,
-      take: 100,
+      take: 50,
     });
     // console.log('orderByClause', orderByClause)
 
