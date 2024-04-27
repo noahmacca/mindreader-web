@@ -15,7 +15,12 @@ export interface Feature extends PrismaFeature {
   highestActivatingImages: number[];
 }
 
-const featureCache = new NodeCache({ stdTTL: 86400, checkperiod: 86400 });
+const cacheDuration = 60 * 60 * 24 * 7; // cache for a week! Data only really changes on redeploy
+
+const featureCache = new NodeCache({
+  stdTTL: cacheDuration,
+  checkperiod: cacheDuration,
+});
 
 function isValidActivationHistVal(obj: any): obj is ActivationHistVal {
   return obj && typeof obj.x === "number" && typeof obj.y === "number";
