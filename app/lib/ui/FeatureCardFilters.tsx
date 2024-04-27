@@ -130,27 +130,9 @@ export default function FeatureCardFilters({
   return (
     <div className="flex text-sm flex-col space-y-1 md:flex-row md:space-x-4 md:text-lg md:space-y-0">
       {renderLabelAndInput(
-        "Search",
-        <form onSubmit={handleSearch} className="flex space-x-0.5 md:space-x-0">
-          <input
-            type="text"
-            className="border border-gray-300 rounded-md px-2 py-0.5"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder='For example, "dog"'
-          />
-          <button
-            type="submit"
-            className="border border-gray-300 rounded-md px-2 py-0.5"
-          >
-            Go
-          </button>
-        </form>
-      )}
-      {renderLabelAndInput(
         "Model",
         <select
-          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-32"
           value={validModel}
           onChange={(e) => handleSelectChange("model", e.target.value)}
         >
@@ -164,7 +146,7 @@ export default function FeatureCardFilters({
       {renderLabelAndInput(
         "Features",
         <select
-          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-32"
           value={validFeatures}
           onChange={(e) => handleSelectChange("features", e.target.value)}
         >
@@ -180,7 +162,7 @@ export default function FeatureCardFilters({
       {renderLabelAndInput(
         "Layers",
         <select
-          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-48"
+          className="border border-gray-300 rounded-md px-2 py-0.5 min-w-32"
           value={layers}
           onChange={(e) => handleSelectChange("layers", e.target.value)}
         >
@@ -208,6 +190,24 @@ export default function FeatureCardFilters({
           <option value="min_autointerp_gini">Min Autointerp Gini</option>
           <option value="random">Random</option>
         </select>
+      )}
+      {renderLabelAndInput(
+        "Search",
+        <form onSubmit={handleSearch} className="flex space-x-0.5 md:space-x-0">
+          <input
+            type="text"
+            className="border border-gray-300 rounded-md px-2 py-0.5"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder='For example, "dog"'
+          />
+          <button
+            type="submit"
+            className="border border-gray-300 rounded-md px-2 py-0.5"
+          >
+            Go
+          </button>
+        </form>
       )}
     </div>
   );
