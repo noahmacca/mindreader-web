@@ -150,7 +150,7 @@ const FeatureCard = ({ featureId }: { featureId: string }) => {
                         patchIdx: patch.patchIdx,
                       }))}
                       onSquareHover={setSelectedActivation}
-                      showDefaultTooltip={!hasHovered && imgIdx === 0}
+                      showDefaultTooltip={!hasHovered && imgIdx === 2}
                     />
                   </div>
                 </div>
